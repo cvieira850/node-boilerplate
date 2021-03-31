@@ -30,8 +30,11 @@ describe('Account Pg Repository', () => {
     await mainConnection.close()
     await connection.close()
   })
+  const makeSut = (): AccountPgRepository => {
+    return new AccountPgRepository()
+  }
   test('Should return an account on success', async () => {
-    const sut = new AccountPgRepository()
+    const sut = makeSut()
     const account = await sut.add({
       name: 'any_name',
       email: 'any_email@mail.com',
