@@ -1,3 +1,4 @@
 export const tables: string[] = [
-  'users'
+  'users',
+  'errors'
 ]
