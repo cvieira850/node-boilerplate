@@ -5,6 +5,10 @@ import Error from '../typeorm/entities/error'
 import { LogPgRepository } from './log'
 
 let connection: Connection
+const makeSut = (): LogPgRepository => {
+  return new LogPgRepository()
+}
+
 describe('Log Pg Repository', () => {
   beforeAll(async () => {
     connection = await createConnection()
@@ -31,7 +35,7 @@ describe('Log Pg Repository', () => {
     await connection.close()
   })
   test('Should create an error log on success', async () => {
-    const sut = new LogPgRepository()
+    const sut = makeSut()
     await sut.logError('any_error')
     const ErrorRepository = getRepository(Error)
     const count = await ErrorRepository.count()
