@@ -7,7 +7,6 @@ module.exports = {
     '!**/protocols/**',
     '!<rootDir>/src/main/**',
     '!<rootDir>/src/domain/**',
-    '!<rootDir>/src/presentation/helpers/validators/**',
     '!<rootDir>/src/infra/db/postgresql/typeorm/**'
   ],
   coverageDirectory: 'coverage',
