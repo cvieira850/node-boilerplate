@@ -1,6 +1,6 @@
 
 import { getRepository } from 'typeorm'
-import { AddAccountRepository } from '../../../../data/protocols/add-account-repository'
+import { AddAccountRepository } from '../../../../data/protocols/db/add-account-repository'
 import { AccountModel } from '../../../../domain/models/account'
 import { AddAccountModel } from '../../../../domain/usecases/add-account'
 import User from '../typeorm/entities/user'
