@@ -17,6 +17,9 @@ export class AccountPgRepository implements AddAccountRepository, LoadAccountByE
   async loadByEmail (email: string): Promise<AccountModel> {
     const userRepository = getRepository(User)
     const account = userRepository.findOne({ email })
-    return account
+    if (account) {
+      return account
+    }
+    return null
   }
 }
