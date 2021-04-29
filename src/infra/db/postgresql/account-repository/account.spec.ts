@@ -1,6 +1,7 @@
 
 import { Connection, getConnection } from 'typeorm'
 import { tables } from '../tables'
+import User from '../typeorm/entities/user'
 import createConnection from '../typeorm/index'
 import { AccountPgRepository } from './account'
 
@@ -33,7 +34,7 @@ describe('Account Pg Repository', () => {
   const makeSut = (): AccountPgRepository => {
     return new AccountPgRepository()
   }
-  test('Should return an account on success', async () => {
+  test('Should return an account on add success', async () => {
     const sut = makeSut()
     const account = await sut.add({
       name: 'any_name',
@@ -45,5 +46,27 @@ describe('Account Pg Repository', () => {
     expect(account.name).toBe('any_name')
     expect(account.email).toBe('any_email@mail.com')
     expect(account.password).toBe('any_password')
+  })
+
+  test('Should return an account on loadByEmail success', async () => {
+    const sut = makeSut()
+    await getConnection()
+      .createQueryBuilder()
+      .insert()
+      .into(User)
+      .values(
+        {
+          name: 'valid_name',
+          email: 'valid_email@email.com',
+          password: 'valid_password'
+        }
+      )
+      .execute()
+    const account = await sut.loadByEmail('valid_email@email.com')
+    expect(account).toBeTruthy()
+    expect(account.id).toBeTruthy()
+    expect(account.name).toBe('valid_name')
+    expect(account.email).toBe('valid_email@email.com')
+    expect(account.password).toBe('valid_password')
   })
 })
