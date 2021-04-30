@@ -29,6 +29,9 @@ class User {
 
   @DeleteDateColumn()
   deleted_at: Date
+
+  @Column()
+  access_token: string
 }
 
 export default User

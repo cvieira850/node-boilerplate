@@ -19,7 +19,7 @@
   "port": "5432",
   "username": "docker",
   "password": "123mudar",
-  "database": "boilerplate_tests",
+  "database": "tests",
   "entities": ["./src/infra/db/postgresql/typeorm/entities/*.ts"],
   "migrations": ["./src/infra/db/postgresql/typeorm/migrations/*.ts"],
   "cli": {
