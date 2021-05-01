@@ -2,7 +2,7 @@ import { Connection, getConnection, getRepository } from 'typeorm'
 import createConnection from '../typeorm'
 import { tables } from '../tables'
 import Error from '../typeorm/entities/error'
-import { LogPgRepository } from './log'
+import { LogPgRepository } from './log-pg-repository'
 
 let connection: Connection
 const makeSut = (): LogPgRepository => {

@@ -1,6 +1,6 @@
 import request from 'supertest'
 import { Connection, createConnection, getConnection } from 'typeorm'
-import { tables } from '../../infra/db/postgresql/tables'
+import { tables } from '../../infra/db/pg/tables'
 import app from '../config/app'
 
 let connection: Connection

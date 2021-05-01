@@ -6,10 +6,10 @@
   "username": "docker",
   "password": "123mudar",
   "database": "boilerplate",
-  "entities": ["./src/infra/db/postgresql/typeorm/entities/*.ts"],
-  "migrations": ["./src/infra/db/postgresql/typeorm/migrations/*.ts"],
+  "entities": ["./src/infra/db/pg/typeorm/entities/*.ts"],
+  "migrations": ["./src/infra/db/pg/typeorm/migrations/*.ts"],
   "cli": {
-    "migrationsDir": "./src/infra/db/postgresql/typeorm/migrations"
+    "migrationsDir": "./src/infra/db/pg/typeorm/migrations"
   }
 }, 
 {
@@ -20,10 +20,10 @@
   "username": "docker",
   "password": "123mudar",
   "database": "tests",
-  "entities": ["./src/infra/db/postgresql/typeorm/entities/*.ts"],
-  "migrations": ["./src/infra/db/postgresql/typeorm/migrations/*.ts"],
+  "entities": ["./src/infra/db/pg/typeorm/entities/*.ts"],
+  "migrations": ["./src/infra/db/pg/typeorm/migrations/*.ts"],
   "cli": {
-    "migrationsDir": "./src/infra/db/postgresql/typeorm/migrations"
+    "migrationsDir": "./src/infra/db/pg/typeorm/migrations"
   }
 }
 ]

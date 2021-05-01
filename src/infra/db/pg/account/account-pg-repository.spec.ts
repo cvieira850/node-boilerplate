@@ -3,7 +3,7 @@ import { Connection, getConnection, getRepository } from 'typeorm'
 import { tables } from '../tables'
 import User from '../typeorm/entities/user'
 import createConnection from '../typeorm/index'
-import { AccountPgRepository } from './account'
+import { AccountPgRepository } from './account-pg-repository'
 
 let connection: Connection
 describe('Account Pg Repository', () => {
