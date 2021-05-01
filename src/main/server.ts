@@ -1,5 +1,5 @@
 // import app from './config/app'
-import createConnection from '../infra/db/postgresql/typeorm/index'
+import createConnection from '../infra/db/pg/typeorm/index'
 import env from './config/env'
 
 createConnection().then(async () => {
