@@ -20,7 +20,7 @@ UpdateAccessTokenRepository {
 
   async loadByEmail (email: string): Promise<AccountModel> {
     const userRepository = getRepository(User)
-    const account = userRepository.findOne({ email })
+    const account = await userRepository.findOne({ email })
     if (account) {
       return account
     }
