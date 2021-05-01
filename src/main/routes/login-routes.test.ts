@@ -4,7 +4,7 @@ import { tables } from '../../infra/db/pg/tables'
 import app from '../config/app'
 
 let connection: Connection
-describe('SignUp Routes', () => {
+describe('Login Routes', () => {
   beforeAll(async () => {
     connection = await createConnection()
     for (const table of tables) {
@@ -28,15 +28,17 @@ describe('SignUp Routes', () => {
       await connection.query(`DELETE FROM ${table}`)
     }
   })
-  test('Should return an account on success', async () => {
-    await request(app)
-      .post('/api/signup')
-      .send({
-        name: 'Caio',
-        email: 'contato@caiovieira.com.br',
-        password: '123',
-        passwordConfirmation: '123'
-      })
-      .expect(200)
+  describe('POST /signup', () => {
+    test('Should return 200 on signup', async () => {
+      await request(app)
+        .post('/api/signup')
+        .send({
+          name: 'Caio',
+          email: 'contato@caiovieira.com.br',
+          password: '123',
+          passwordConfirmation: '123'
+        })
+        .expect(200)
+    })
   })
 })
