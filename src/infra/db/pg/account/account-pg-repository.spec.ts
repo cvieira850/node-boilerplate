@@ -1,36 +1,17 @@
 
-import { Connection, getConnection, getRepository } from 'typeorm'
-import { tables } from '../tables'
+import { getConnection, getRepository, createConnection } from 'typeorm'
 import User from '../typeorm/entities/user'
-import createConnection from '../typeorm/index'
 import { AccountPgRepository } from './account-pg-repository'
 
-let connection: Connection
 describe('Account Pg Repository', () => {
-  beforeAll(async () => {
-    connection = await createConnection()
-    for (const table of tables) {
-      await connection.query(`DROP TABLE IF EXISTS ${table}`)
-    }
-    await connection.query('DROP TABLE IF EXISTS migrations')
-
-    await connection.runMigrations()
-  })
-
   beforeEach(async () => {
-    for (const table of tables) {
-      await connection.query(`DELETE FROM ${table}`)
-    }
+    await createConnection()
   })
 
-  afterAll(async () => {
-    for (const table of tables) {
-      await connection.query(`DELETE FROM ${table}`)
-    }
-    const mainConnection = getConnection()
-    await mainConnection.close()
-    await connection.close()
+  afterEach(async () => {
+    await getConnection().close()
   })
+
   const makeSut = (): AccountPgRepository => {
     return new AccountPgRepository()
   }

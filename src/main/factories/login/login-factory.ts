@@ -1,4 +1,4 @@
-import env from '../../config/env'
+import '../../config/env'
 import { makeLoginValidation } from './login-validation-factory'
 import { LogControllerDecorator } from '../../decorators/log-controller-decorator'
 import { Controller } from '../../../presentation/protocols'
@@ -12,7 +12,7 @@ import { JwtAdapter } from '../../../infra/cryptography/jwt-adapter/jwt-adapter'
 export const makeLoginController = (): Controller => {
   const salt = 12
   const bcryptAdapter = new BcryptAdapter(salt)
-  const jwtAdapter = new JwtAdapter(env.jwtSecret)
+  const jwtAdapter = new JwtAdapter(process.env.JWT_SECRET)
   const accountPgRepository = new AccountPgRepository()
   const dbAuthentication = new DbAuthentication(
     accountPgRepository,
