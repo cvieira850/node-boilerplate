@@ -1,4 +1,4 @@
-import env from '../../config/env'
+import '../../config/env'
 import { DbAddAccount } from '../../../data/usecases/add-account/db-add-account'
 import { BcryptAdapter } from '../../../infra/cryptography/bcrypt-adapter/bcrypt-adapter'
 import { JwtAdapter } from '../../../infra/cryptography/jwt-adapter/jwt-adapter'
@@ -13,7 +13,7 @@ import { DbAuthentication } from '../../../data/usecases/authentication/db-authe
 export const makeSignUpController = (): Controller => {
   const salt = 12
   const bcryptAdapter = new BcryptAdapter(salt)
-  const jwtAdapter = new JwtAdapter(env.jwtSecret)
+  const jwtAdapter = new JwtAdapter(process.env.JWT_SECRET)
   const accountPgRepository = new AccountPgRepository()
   const dbAddAccount = new DbAddAccount(bcryptAdapter, accountPgRepository)
   const dbAuthentication = new DbAuthentication(
