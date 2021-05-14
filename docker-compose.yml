@@ -4,10 +4,10 @@ services:
     container_name: boilerplate-database
     image: postgres:11.5-alpine
     environment:
-      - POSTGRES_DB=boilerplate
-      - POSTGRES_USER=docker
-      - POSTGRES_PASSWORD=123mudar
+      - POSTGRES_DB="${DB_NAME}"
+      - POSTGRES_USER="${DB_USERNAME}"
+      - POSTGRES_PASSWORD="${DB_PASSWORD}"
     volumes:
       - ./.data/postgresql:/var/lib/postgresql/data
     ports:
-      - "5432:5432"
+      - "${DB_PORT}:5432"
