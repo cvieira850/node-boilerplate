@@ -1,22 +1,38 @@
 import { RoleModel } from '../../../domain/models/role'
-import { AddRoleModel } from '../../../domain/usecases/add-role'
-import { AddRoleRepository } from '../../protocols/db/role/db-add-role-repository'
+import { AddRoleModel, AddRoleRepository } from './db-add-role-protocols'
 import { DbAddRole } from './db-add-role'
 
 const makeFakeRoleData = (): AddRoleModel => ({
   name: 'any_name'
 })
 
+const makeAddRoleRepository = (): AddRoleRepository => {
+  class AddRoleRepositoryStub implements AddRoleRepository {
+    async add (roleData: AddRoleModel): Promise<RoleModel> {
+      return new Promise(resolve => resolve({ id: 'any_id', name: 'any_name' }))
+    }
+  }
+  return new AddRoleRepositoryStub()
+}
+
+interface SutTypes {
+  sut: DbAddRole
+  addRoleRepositoryStub: AddRoleRepository
+}
+
+const makeSut = (): SutTypes => {
+  const addRoleRepositoryStub = makeAddRoleRepository()
+  const sut = new DbAddRole(addRoleRepositoryStub)
+  return {
+    sut,
+    addRoleRepositoryStub
+  }
+}
+
 describe('DbAddRole UseCase', () => {
   test('Should call AddRoleRepository with correct values', async () => {
-    class AddRoleRepositoryStub implements AddRoleRepository {
-      async add (roleData: AddRoleModel): Promise<RoleModel> {
-        return new Promise(resolve => resolve({ id: 'any_id', name: 'any_name' }))
-      }
-    }
-    const addRoleRepositoryStub = new AddRoleRepositoryStub()
+    const { sut, addRoleRepositoryStub } = makeSut()
     const addSpy = jest.spyOn(addRoleRepositoryStub, 'add')
-    const sut = new DbAddRole(addRoleRepositoryStub)
     await sut.add(makeFakeRoleData())
     expect(addSpy).toHaveBeenCalledWith(makeFakeRoleData())
   })

@@ -1,5 +1,4 @@
-import { AddRoleRepository } from '../../protocols/db/role/db-add-role-repository'
-import { RoleModel, AddRole, AddRoleModel } from './db-add-role-protocols'
+import { RoleModel, AddRole, AddRoleModel, AddRoleRepository } from './db-add-role-protocols'
 
 export class DbAddRole implements AddRole {
   constructor (private readonly addRoleRepository: AddRoleRepository) {}
