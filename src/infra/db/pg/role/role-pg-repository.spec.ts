@@ -43,4 +43,10 @@ describe('Account Pg Repository', () => {
     expect(role.id).toBeTruthy()
     expect(role.name).toBe('valid_name')
   })
+
+  test('Should return null if loadByName fails', async () => {
+    const sut = makeSut()
+    const role = await sut.loadByName('valid_name')
+    expect(role).toBeFalsy()
+  })
 })
