@@ -1,6 +1,7 @@
 import { HttpRequest, Validation, RoleModel, AddRole, AddRoleModel } from './add-role-controller-protocols'
 import { AddRoleController } from './add-role-controller'
-import { badRequest } from '../../../helpers/http/http-helper'
+import { badRequest, forbidden } from '../../../helpers/http/http-helper'
+import { RoleIsAlreadyRegisteredError } from '../../../errors'
 
 const makeFakeRequest = (): HttpRequest => ({
   body: {
@@ -70,5 +71,12 @@ describe('AddRoleController', () => {
     const httpRequest = makeFakeRequest()
     await sut.handle(httpRequest)
     expect(addSpy).toHaveBeenCalledWith(httpRequest.body)
+  })
+
+  test('Should return 403 if AddRole returns null', async () => {
+    const { sut, addRoleStub } = makeSut()
+    jest.spyOn(addRoleStub,'add').mockReturnValueOnce(new Promise(resolve => resolve(null)))
+    const httpResponse = await sut.handle(makeFakeRequest())
+    expect(httpResponse).toEqual(forbidden(new RoleIsAlreadyRegisteredError()))
   })
 })
