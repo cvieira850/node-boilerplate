@@ -1,4 +1,4 @@
-import { HttpRequest, Validation } from './add-role-controller-protocols'
+import { HttpRequest, Validation, RoleModel, AddRole, AddRoleModel } from './add-role-controller-protocols'
 import { AddRoleController } from './add-role-controller'
 import { badRequest } from '../../../helpers/http/http-helper'
 
@@ -6,6 +6,11 @@ const makeFakeRequest = (): HttpRequest => ({
   body: {
     name: 'any_name'
   }
+})
+
+const makeFakeRole = (): RoleModel => ({
+  id: 'any_id',
+  name: 'any_name'
 })
 
 const makeValidation = (): Validation => {
@@ -17,17 +22,29 @@ const makeValidation = (): Validation => {
   return new ValidationStub()
 }
 
+const makeAddRole = (): AddRole => {
+  class AddRoleStub implements AddRole {
+    async add (data: AddRoleModel): Promise<RoleModel> {
+      return new Promise(resolve => resolve(makeFakeRole()))
+    }
+  }
+  return new AddRoleStub()
+}
+
 interface SutTypes {
   validationStub: Validation
   sut: AddRoleController
+  addRoleStub: AddRole
 }
 
 const makeSut = (): SutTypes => {
   const validationStub = makeValidation()
-  const sut = new AddRoleController(validationStub)
+  const addRoleStub = makeAddRole()
+  const sut = new AddRoleController(validationStub,addRoleStub)
   return {
     sut,
-    validationStub
+    validationStub,
+    addRoleStub
   }
 }
 
@@ -45,5 +62,13 @@ describe('AddRoleController', () => {
     jest.spyOn(validationStub,'validate').mockReturnValueOnce(new Error())
     const httpResponse = await sut.handle(makeFakeRequest())
     expect(httpResponse).toEqual(badRequest(new Error()))
+  })
+
+  test('Should call AddRole with correct values', async () => {
+    const { sut, addRoleStub } = makeSut()
+    const addSpy = jest.spyOn(addRoleStub,'add')
+    const httpRequest = makeFakeRequest()
+    await sut.handle(httpRequest)
+    expect(addSpy).toHaveBeenCalledWith(httpRequest.body)
   })
 })
