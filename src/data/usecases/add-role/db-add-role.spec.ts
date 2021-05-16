@@ -73,4 +73,11 @@ describe('DbAddRole UseCase', () => {
     const role = await sut.add(makeFakeRoleData())
     expect(role).toBeNull()
   })
+
+  test('Should call LoadRoleByNameRepository with correct name', async () => {
+    const { sut,loadRoleByNameRepositoryStub } = makeSut()
+    const loadSpy = jest.spyOn(loadRoleByNameRepositoryStub,'loadByName')
+    await sut.add(makeFakeRoleData())
+    expect(loadSpy).toHaveBeenCalledWith('any_name')
+  })
 })
