@@ -1,5 +1,5 @@
 import { AddRole, Controller, HttpRequest, HttpResponse, Validation } from './add-role-controller-protocols'
-import { badRequest, forbidden } from '../../../helpers/http/http-helper'
+import { badRequest, forbidden, serverError } from '../../../helpers/http/http-helper'
 import { RoleIsAlreadyRegisteredError } from '../../../errors'
 
 export class AddRoleController implements Controller {
@@ -9,11 +9,17 @@ export class AddRoleController implements Controller {
   ) {}
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
-    const error = this.validation.validate(httpRequest.body)
-    if (error) {
-      return badRequest(error)
+    try {
+      const error = this.validation.validate(httpRequest.body)
+      if (error) {
+        return badRequest(error)
+      }
+      const role = await this.addRole.add(httpRequest.body)
+      if (!role) {
+        return forbidden(new RoleIsAlreadyRegisteredError())
+      }
+    } catch (error) {
+      return serverError(error)
     }
-    await this.addRole.add(httpRequest.body)
-    return forbidden(new RoleIsAlreadyRegisteredError())
   }
 }
