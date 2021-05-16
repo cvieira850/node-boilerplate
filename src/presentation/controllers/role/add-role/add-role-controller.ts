@@ -1,5 +1,5 @@
 import { AddRole, Controller, HttpRequest, HttpResponse, Validation } from './add-role-controller-protocols'
-import { badRequest, forbidden, serverError } from '../../../helpers/http/http-helper'
+import { badRequest, forbidden, ok, serverError } from '../../../helpers/http/http-helper'
 import { RoleIsAlreadyRegisteredError } from '../../../errors'
 
 export class AddRoleController implements Controller {
@@ -18,6 +18,7 @@ export class AddRoleController implements Controller {
       if (!role) {
         return forbidden(new RoleIsAlreadyRegisteredError())
       }
+      return ok(role)
     } catch (error) {
       return serverError(error)
     }
