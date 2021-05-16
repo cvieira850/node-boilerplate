@@ -5,5 +5,5 @@ export interface AddRoleModel {
 }
 
 export interface AddRole {
-  add: (account: AddRoleModel) => Promise<RoleModel>
+  add: (data: AddRoleModel) => Promise<RoleModel>
 }
