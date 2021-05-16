@@ -1,6 +1,6 @@
 import { HttpRequest, Validation, RoleModel, AddRole, AddRoleModel } from './add-role-controller-protocols'
 import { AddRoleController } from './add-role-controller'
-import { badRequest, forbidden, serverError } from '../../../helpers/http/http-helper'
+import { badRequest, forbidden, ok, serverError } from '../../../helpers/http/http-helper'
 import { RoleIsAlreadyRegisteredError } from '../../../errors'
 
 const makeFakeRequest = (): HttpRequest => ({
@@ -86,5 +86,12 @@ describe('AddRoleController', () => {
     const httpRequest = makeFakeRequest()
     const httpResponse = await sut.handle(httpRequest)
     expect(httpResponse).toEqual(serverError(new Error()))
+  })
+
+  test('Should return 200 on success', async () => {
+    const { sut } = makeSut()
+    const httpRequest = makeFakeRequest()
+    const httpResponse = await sut.handle(httpRequest)
+    expect(httpResponse).toEqual(ok(makeFakeRole()))
   })
 })
