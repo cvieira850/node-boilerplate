@@ -1,5 +1,6 @@
 import { AddRoleModel, AddRoleRepository, RoleModel } from './db-add-role-protocols'
 import { DbAddRole } from './db-add-role'
+import { LoadRoleByNameRepository } from '../../protocols/db/role/load-role-by-name-repository'
 
 const makeFakeRoleData = (): AddRoleModel => ({
   name: 'any_name'
@@ -19,17 +20,29 @@ const makeAddRoleRepository = (): AddRoleRepository => {
   return new AddRoleRepositoryStub()
 }
 
+const makeLoadRoleByNameRepository = (): LoadRoleByNameRepository => {
+  class LoadRoleByNameRepositoryStub implements LoadRoleByNameRepository {
+    async loadByName (name: string): Promise<RoleModel> {
+      return new Promise(resolve => resolve(null))
+    }
+  }
+  return new LoadRoleByNameRepositoryStub()
+}
+
 interface SutTypes {
   sut: DbAddRole
   addRoleRepositoryStub: AddRoleRepository
+  loadRoleByNameRepositoryStub: LoadRoleByNameRepository
 }
 
 const makeSut = (): SutTypes => {
   const addRoleRepositoryStub = makeAddRoleRepository()
-  const sut = new DbAddRole(addRoleRepositoryStub)
+  const loadRoleByNameRepositoryStub = makeLoadRoleByNameRepository()
+  const sut = new DbAddRole(addRoleRepositoryStub, loadRoleByNameRepositoryStub)
   return {
     sut,
-    addRoleRepositoryStub
+    addRoleRepositoryStub,
+    loadRoleByNameRepositoryStub
   }
 }
 
@@ -52,5 +65,12 @@ describe('DbAddRole UseCase', () => {
     const { sut } = makeSut()
     const role = await sut.add(makeFakeRoleData())
     expect(role).toEqual(makeFakeRole())
+  })
+
+  test('Should return null if LoadRoleByNameRepository not returns null', async () => {
+    const { sut, loadRoleByNameRepositoryStub } = makeSut()
+    jest.spyOn(loadRoleByNameRepositoryStub,'loadByName').mockReturnValueOnce(new Promise(resolve => resolve(makeFakeRole())))
+    const role = await sut.add(makeFakeRoleData())
+    expect(role).toBeNull()
   })
 })
