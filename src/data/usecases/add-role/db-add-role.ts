@@ -3,7 +3,7 @@ import { RoleModel, AddRole, AddRoleModel, AddRoleRepository } from './db-add-ro
 export class DbAddRole implements AddRole {
   constructor (private readonly addRoleRepository: AddRoleRepository) {}
   async add (data: AddRoleModel): Promise<RoleModel> {
-    await this.addRoleRepository.add(data)
-    return new Promise(resolve => resolve(null))
+    const role = await this.addRoleRepository.add(data)
+    return role
   }
 }
