@@ -18,6 +18,9 @@ AddRoleRepository, LoadRoleByNameRepository {
   async loadByName (name: string): Promise<RoleModel> {
     const userRepository = getRepository(Role)
     const role = await userRepository.findOne({ name })
-    return role
+    if (role) {
+      return role
+    }
+    return null
   }
 }
