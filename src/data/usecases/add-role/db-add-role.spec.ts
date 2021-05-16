@@ -36,4 +36,11 @@ describe('DbAddRole UseCase', () => {
     await sut.add(makeFakeRoleData())
     expect(addSpy).toHaveBeenCalledWith(makeFakeRoleData())
   })
+
+  test('Should throw if AddRoleRepository throws', async () => {
+    const { sut, addRoleRepositoryStub } = makeSut()
+    jest.spyOn(addRoleRepositoryStub,'add').mockResolvedValueOnce(new Promise((resolve,reject) => reject(new Error())))
+    const promise = sut.add(makeFakeRoleData())
+    await expect(promise).rejects.toThrow()
+  })
 })
