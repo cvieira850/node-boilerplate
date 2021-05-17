@@ -14,12 +14,12 @@ module.exports = {
   synchronize: DB_SYNC === 'true',
   dropSchema: DB_DROP_SCHEMA === 'true',
   entities: [
-    (NODE_ENV === 'test' || NODE_ENV === 'dev')
+    (NODE_ENV !== 'prod')
       ? `${__dirname}/src/infra/db/pg/typeorm/entities/*.ts`
       : `${__dirname}/dist/src/infra/db/pg/typeorm/entities/*.js`
   ],
   migrations: [
-    (NODE_ENV === 'test' || NODE_ENV === 'dev')
+    (NODE_ENV !== 'prod')
       ? `${__dirname}/src/infra/db/pg/typeorm/migrations/*.ts`
       : `${__dirname}/dist/src/infra/db/pg/typeorm/migrations/*.js`
   ],
