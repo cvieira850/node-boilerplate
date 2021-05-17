@@ -1,15 +1,32 @@
 import { Validation } from './add-role-to-user-protocols'
 import { AddRoleToUserController } from './add-role-to-user-controller'
 
-describe('AddRoleToUserController', () => {
-  test('Should call validaton with correct values', async () => {
-    class ValidationStub implements Validation {
-      validate (input: any): Error {
-        return null
-      }
+const makeValidation = (): Validation => {
+  class ValidationStub implements Validation {
+    validate (input: any): Error {
+      return null
     }
-    const validationStub = new ValidationStub()
-    const sut = new AddRoleToUserController(validationStub)
+  }
+  return new ValidationStub()
+}
+
+interface SutTypes {
+  sut: AddRoleToUserController
+  validationStub: Validation
+}
+
+const makeSut = (): SutTypes => {
+  const validationStub = makeValidation()
+  const sut = new AddRoleToUserController(validationStub)
+  return {
+    sut,
+    validationStub
+  }
+}
+
+describe('AddRoleToUserController', () => {
+  test('Should call validation with correct values', async () => {
+    const { sut, validationStub } = makeSut()
     const validateSpy = jest.spyOn(validationStub,'validate')
     const httpRequest = {
       body: {
