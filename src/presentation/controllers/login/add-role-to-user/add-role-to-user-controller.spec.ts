@@ -1,4 +1,4 @@
-import { Validation, AccountModel, AddRoleToUser, AddRoleToUserModel } from './add-role-to-user-protocols'
+import { Validation, AccountModel, AddRoleToUser, AddRoleToUserModel, HttpRequest } from './add-role-to-user-protocols'
 import { AddRoleToUserController } from './add-role-to-user-controller'
 import { badRequest, forbidden } from '../../../helpers/http/http-helper'
 import { InvalidRoleOrUserError } from '../../../errors'
@@ -9,6 +9,13 @@ const makeFakeAccount = (): AccountModel => ({
   email: 'valid_email@mail.com',
   password: 'valid_password',
   role_id: 'valid_role_id'
+})
+
+const makeFakeHttpRequest = (): HttpRequest => ({
+  body: {
+    userId: 'valid_user_id',
+    roleId: 'valid_role_id'
+  }
 })
 
 const makeAddRoleToUser = (): AddRoleToUser => {
@@ -50,12 +57,7 @@ describe('AddRoleToUserController', () => {
   test('Should call validation with correct values', async () => {
     const { sut, validationStub } = makeSut()
     const validateSpy = jest.spyOn(validationStub,'validate')
-    const httpRequest = {
-      body: {
-        userId: 'valid_user_id',
-        roleId: 'valid_role_id'
-      }
-    }
+    const httpRequest = makeFakeHttpRequest()
     await sut.handle(httpRequest)
     expect(validateSpy).toHaveBeenCalledWith(httpRequest.body)
   })
@@ -63,25 +65,14 @@ describe('AddRoleToUserController', () => {
   test('Should return 400 if validation fails', async () => {
     const { sut, validationStub } = makeSut()
     jest.spyOn(validationStub,'validate').mockReturnValueOnce(new Error())
-    const httpRequest = {
-      body: {
-        userId: 'valid_user_id',
-        roleId: 'valid_role_id'
-      }
-    }
-    const httpResponse = await sut.handle(httpRequest)
+    const httpResponse = await sut.handle(makeFakeHttpRequest())
     expect(httpResponse).toEqual(badRequest(new Error()))
   })
 
   test('Should call AddRoleToUser with correct values', async () => {
     const { sut, addRoleToUserStub } = makeSut()
     const addSpy = jest.spyOn(addRoleToUserStub,'addRoleToUser')
-    const httpRequest = {
-      body: {
-        userId: 'valid_user_id',
-        roleId: 'valid_role_id'
-      }
-    }
+    const httpRequest = makeFakeHttpRequest()
     await sut.handle(httpRequest)
     expect(addSpy).toHaveBeenCalledWith(httpRequest.body)
   })
@@ -89,13 +80,7 @@ describe('AddRoleToUserController', () => {
   test('Should return 403 if AddRoleToUser returns null', async () => {
     const { sut, addRoleToUserStub } = makeSut()
     jest.spyOn(addRoleToUserStub,'addRoleToUser').mockReturnValueOnce(new Promise(resolve => resolve(null)))
-    const httpRequest = {
-      body: {
-        userId: 'valid_user_id',
-        roleId: 'valid_role_id'
-      }
-    }
-    const httpResponse = await sut.handle(httpRequest)
+    const httpResponse = await sut.handle(makeFakeHttpRequest())
     expect(httpResponse).toEqual(forbidden(new InvalidRoleOrUserError()))
   })
 })

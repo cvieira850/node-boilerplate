@@ -83,15 +83,13 @@ describe('AddRoleController', () => {
   test('Should return 500 if AddRole throws', async () => {
     const { sut, addRoleStub } = makeSut()
     jest.spyOn(addRoleStub,'add').mockResolvedValueOnce(new Promise((resolve,reject) => reject(new Error())))
-    const httpRequest = makeFakeRequest()
-    const httpResponse = await sut.handle(httpRequest)
+    const httpResponse = await sut.handle(makeFakeRequest())
     expect(httpResponse).toEqual(serverError(new Error()))
   })
 
   test('Should return 200 on success', async () => {
     const { sut } = makeSut()
-    const httpRequest = makeFakeRequest()
-    const httpResponse = await sut.handle(httpRequest)
+    const httpResponse = await sut.handle(makeFakeRequest())
     expect(httpResponse).toEqual(ok(makeFakeRole()))
   })
 })
