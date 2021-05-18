@@ -11,6 +11,6 @@
 > ## Exceções:
 01. ⛔️ Retorna erro 404 se a API não existir
 02. ⛔️ Retorna erro 400 se **userId** ou **roleId** não forem fornecidos pelo client
-03. ⛔️ Retorna erro 401 se o campo **userId** for um usuário inválido
-04. ⛔️ Retorna erro 401 se o campo **roleId** for uma função inválida
-05. ⛔️ Retorna erro 500 se der erro ao tentar atualizar o usuário com o id da função
+3.  ⛔️ Retorna erro 403 se o campo **userId** for inválido
+4.  ⛔️ Retorna erro 403 se o campo **roleId** for inválido
+5.  ⛔️ Retorna erro 500 se der erro ao tentar atualizar o usuário com o id da função
