@@ -1,7 +1,7 @@
 import { DbAddRoleToUser } from './db-add-role-to-user'
-import { AddRoleToUserModel, AccountModel, AddRoleToUserRepository } from './db-add-role-to-user-protocols'
+import { AddRoleToUserModel, AccountModel, AddRoleToUserRepository, LoadAccountByIdRepository } from './db-add-role-to-user-protocols'
 
-const makeAddRoleToUserData = (): AddRoleToUserModel => ({
+const makeFakeAddRoleToUserData = (): AddRoleToUserModel => ({
   userId: 'valid_user_id',
   roleId: 'valid_role_id'
 })
@@ -13,6 +13,15 @@ const makeFakeAccount = (): AccountModel => ({
   password: 'hashed_password',
   role_id: 'valid_role_id'
 })
+
+const makeLoadAccountByIdRepositoryStub = (): LoadAccountByIdRepository => {
+  class LoadAccountByIdRepositoryStub implements LoadAccountByIdRepository {
+    async loadById (userId: string): Promise<AccountModel> {
+      return new Promise(resolve => resolve(makeFakeAccount()))
+    }
+  }
+  return new LoadAccountByIdRepositoryStub()
+}
 
 const makeAddRoleToUserRepository = (): AddRoleToUserRepository => {
   class AddRoleToUserRepositoryStub implements AddRoleToUserRepository {
@@ -26,14 +35,20 @@ const makeAddRoleToUserRepository = (): AddRoleToUserRepository => {
 interface SutTypes {
   sut: DbAddRoleToUser
   addRoleToUserRepositoryStub: AddRoleToUserRepository
+  loadAccountByIdRepositoryStub: LoadAccountByIdRepository
 }
 
 const makeSut = (): SutTypes => {
   const addRoleToUserRepositoryStub = makeAddRoleToUserRepository()
-  const sut = new DbAddRoleToUser(addRoleToUserRepositoryStub)
+  const loadAccountByIdRepositoryStub = makeLoadAccountByIdRepositoryStub()
+  const sut = new DbAddRoleToUser(
+    addRoleToUserRepositoryStub,
+    loadAccountByIdRepositoryStub
+  )
   return {
     sut,
-    addRoleToUserRepositoryStub
+    addRoleToUserRepositoryStub,
+    loadAccountByIdRepositoryStub
   }
 }
 
@@ -41,14 +56,22 @@ describe('DbAddRoleToUser UseCase', () => {
   test('Should call AddRoleToUserRepository with correct values', async () => {
     const { sut, addRoleToUserRepositoryStub } = makeSut()
     const addSpy = jest.spyOn(addRoleToUserRepositoryStub,'addRoleToUser')
-    await sut.addRoleToUser(makeAddRoleToUserData())
-    expect(addSpy).toHaveBeenCalledWith(makeAddRoleToUserData())
+    await sut.addRoleToUser(makeFakeAddRoleToUserData())
+    expect(addSpy).toHaveBeenCalledWith(makeFakeAddRoleToUserData())
   })
 
   test('Should throw if AddRoleToUserRepository throws', async () => {
     const { sut, addRoleToUserRepositoryStub } = makeSut()
     jest.spyOn(addRoleToUserRepositoryStub,'addRoleToUser').mockReturnValueOnce(new Promise((resolve,reject) => reject(new Error())))
-    const promise = sut.addRoleToUser(makeAddRoleToUserData())
+    const promise = sut.addRoleToUser(makeFakeAddRoleToUserData())
     await expect(promise).rejects.toThrow()
+  })
+
+  test('Should call LoadAccountByIdRepository with correct value', async () => {
+    const { sut, loadAccountByIdRepositoryStub } = makeSut()
+    const loadSpy = jest.spyOn(loadAccountByIdRepositoryStub,'loadById')
+    const { userId, roleId } = makeFakeAddRoleToUserData()
+    await sut.addRoleToUser({ userId, roleId })
+    expect(loadSpy).toHaveBeenCalledWith(userId)
   })
 })
