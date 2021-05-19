@@ -4,8 +4,11 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
-  DeleteDateColumn
+  DeleteDateColumn,
+  JoinColumn,
+  ManyToOne
 } from 'typeorm'
+import Role from './role'
 
 @Entity('users')
 class User {
@@ -20,6 +23,13 @@ class User {
 
   @Column()
   password: string
+
+  @ManyToOne(() => Role, role => role.user_owner, { eager: true })
+  @JoinColumn({ name: 'role_id' })
+  role: Role
+
+  @Column({ type: 'uuid', default: null, nullable: true })
+  role_id: string
 
   @CreateDateColumn()
   created_at: Date

@@ -4,8 +4,10 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
-  DeleteDateColumn
+  DeleteDateColumn,
+  OneToMany
 } from 'typeorm'
+import User from './user'
 
 @Entity('roles')
 class Role {
@@ -14,6 +16,10 @@ class Role {
 
   @Column()
   name: string
+
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  @OneToMany(() => User, user_owner => user_owner.role)
+  user_owner: User
 
   @CreateDateColumn()
   created_at: Date
