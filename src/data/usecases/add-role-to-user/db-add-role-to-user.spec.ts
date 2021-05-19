@@ -1,29 +1,47 @@
 import { DbAddRoleToUser } from './db-add-role-to-user'
 import { AddRoleToUserModel, AccountModel, AddRoleToUserRepository } from './db-add-role-to-user-protocols'
 
+const makeAddRoleToUserData = (): AddRoleToUserModel => ({
+  userId: 'valid_user_id',
+  roleId: 'valid_role_id'
+})
+
+const makeFakeAccount = (): AccountModel => ({
+  id: 'valid_user_id',
+  name: 'valid_name',
+  email: 'valid_email@mail.com',
+  password: 'hashed_password',
+  role_id: 'valid_role_id'
+})
+
+const makeAddRoleToUserRepository = (): AddRoleToUserRepository => {
+  class AddRoleToUserRepositoryStub implements AddRoleToUserRepository {
+    async addRoleToUser (data: AddRoleToUserModel): Promise<AccountModel> {
+      return new Promise(resolve => resolve(makeFakeAccount()))
+    }
+  }
+  return new AddRoleToUserRepositoryStub()
+}
+
+interface SutTypes {
+  sut: DbAddRoleToUser
+  addRoleToUserRepositoryStub: AddRoleToUserRepository
+}
+
+const makeSut = (): SutTypes => {
+  const addRoleToUserRepositoryStub = makeAddRoleToUserRepository()
+  const sut = new DbAddRoleToUser(addRoleToUserRepositoryStub)
+  return {
+    sut,
+    addRoleToUserRepositoryStub
+  }
+}
+
 describe('DbAddRoleToUser UseCase', () => {
   test('Should call AddRoleToUserRepository with correct values', async () => {
-    class AddRoleToUserRepositoryStub implements AddRoleToUserRepository {
-      async addRoleToUser (data: AddRoleToUserModel): Promise<AccountModel> {
-        return new Promise(resolve => resolve({
-          id: 'valid_user_id',
-          name: 'valid_name',
-          email: 'valid_email@mail.com',
-          password: 'hashed_password',
-          role_id: 'valid_role_id'
-        }))
-      }
-    }
-    const addRoleToUserRepositoryStub = new AddRoleToUserRepositoryStub()
-    const sut = new DbAddRoleToUser(addRoleToUserRepositoryStub)
+    const { sut, addRoleToUserRepositoryStub } = makeSut()
     const addSpy = jest.spyOn(addRoleToUserRepositoryStub,'addRoleToUser')
-    await sut.addRoleToUser({
-      userId: 'valid_user_id',
-      roleId: 'valid_role_id'
-    })
-    expect(addSpy).toHaveBeenCalledWith({
-      userId: 'valid_user_id',
-      roleId: 'valid_role_id'
-    })
+    await sut.addRoleToUser(makeAddRoleToUserData())
+    expect(addSpy).toHaveBeenCalledWith(makeAddRoleToUserData())
   })
 })
