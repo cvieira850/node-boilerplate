@@ -134,4 +134,10 @@ describe('DbAddRoleToUser UseCase', () => {
     const promise = sut.addRoleToUser(makeFakeAddRoleToUserData())
     await expect(promise).rejects.toThrow()
   })
+
+  test('Should return an account on success', async () => {
+    const { sut } = makeSut()
+    const account = await sut.addRoleToUser(makeFakeAddRoleToUserData())
+    expect(account).toEqual(makeFakeAccount())
+  })
 })
