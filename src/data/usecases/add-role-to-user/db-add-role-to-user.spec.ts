@@ -1,9 +1,21 @@
 import { DbAddRoleToUser } from './db-add-role-to-user'
-import { AddRoleToUserModel, AccountModel, AddRoleToUserRepository, LoadAccountByIdRepository } from './db-add-role-to-user-protocols'
+import {
+  AddRoleToUserModel,
+  RoleModel,
+  AccountModel,
+  AddRoleToUserRepository,
+  LoadAccountByIdRepository,
+  LoadRoleByIdRepository
+} from './db-add-role-to-user-protocols'
 
 const makeFakeAddRoleToUserData = (): AddRoleToUserModel => ({
   userId: 'valid_user_id',
   roleId: 'valid_role_id'
+})
+
+const makeFakeRole = (): RoleModel => ({
+  id: 'valid_role_id',
+  name: 'valid_role_name'
 })
 
 const makeFakeAccount = (): AccountModel => ({
@@ -14,6 +26,14 @@ const makeFakeAccount = (): AccountModel => ({
   role_id: 'valid_role_id'
 })
 
+const makeLoadRoleByIdRepositoryStub = (): LoadRoleByIdRepository => {
+  class LoadRoleByIdRepositoryStub implements LoadRoleByIdRepository {
+    async loadById (roleId: string): Promise<RoleModel> {
+      return new Promise(resolve => resolve(makeFakeRole()))
+    }
+  }
+  return new LoadRoleByIdRepositoryStub()
+}
 const makeLoadAccountByIdRepositoryStub = (): LoadAccountByIdRepository => {
   class LoadAccountByIdRepositoryStub implements LoadAccountByIdRepository {
     async loadById (userId: string): Promise<AccountModel> {
@@ -36,19 +56,23 @@ interface SutTypes {
   sut: DbAddRoleToUser
   addRoleToUserRepositoryStub: AddRoleToUserRepository
   loadAccountByIdRepositoryStub: LoadAccountByIdRepository
+  loadRoleByIdRepositoryStub: LoadRoleByIdRepository
 }
 
 const makeSut = (): SutTypes => {
   const addRoleToUserRepositoryStub = makeAddRoleToUserRepository()
   const loadAccountByIdRepositoryStub = makeLoadAccountByIdRepositoryStub()
+  const loadRoleByIdRepositoryStub = makeLoadRoleByIdRepositoryStub()
   const sut = new DbAddRoleToUser(
     addRoleToUserRepositoryStub,
-    loadAccountByIdRepositoryStub
+    loadAccountByIdRepositoryStub,
+    loadRoleByIdRepositoryStub
   )
   return {
     sut,
     addRoleToUserRepositoryStub,
-    loadAccountByIdRepositoryStub
+    loadAccountByIdRepositoryStub,
+    loadRoleByIdRepositoryStub
   }
 }
 
@@ -88,5 +112,13 @@ describe('DbAddRoleToUser UseCase', () => {
     jest.spyOn(loadAccountByIdRepositoryStub,'loadById').mockReturnValueOnce(new Promise((resolve,reject) => reject(new Error())))
     const promise = sut.addRoleToUser(makeFakeAddRoleToUserData())
     await expect(promise).rejects.toThrow()
+  })
+
+  test('Should call LoadRoleByIdRepository with correct value', async () => {
+    const { sut, loadRoleByIdRepositoryStub } = makeSut()
+    const loadSpy = jest.spyOn(loadRoleByIdRepositoryStub,'loadById')
+    const { userId, roleId } = makeFakeAddRoleToUserData()
+    await sut.addRoleToUser({ userId, roleId })
+    expect(loadSpy).toHaveBeenCalledWith(roleId)
   })
 })
