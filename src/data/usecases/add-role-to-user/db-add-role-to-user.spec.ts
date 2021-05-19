@@ -127,4 +127,11 @@ describe('DbAddRoleToUser UseCase', () => {
     const account = await sut.addRoleToUser(makeFakeAddRoleToUserData())
     expect(account).toBeNull()
   })
+
+  test('Should throw if LoadRoleByIdRepository throws', async () => {
+    const { sut, loadRoleByIdRepositoryStub } = makeSut()
+    jest.spyOn(loadRoleByIdRepositoryStub,'loadById').mockReturnValueOnce(new Promise((resolve,reject) => reject(new Error())))
+    const promise = sut.addRoleToUser(makeFakeAddRoleToUserData())
+    await expect(promise).rejects.toThrow()
+  })
 })
