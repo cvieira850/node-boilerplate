@@ -19,7 +19,8 @@ export class DbAddRoleToUser implements AddRoleToUser {
     const account = await this.loadAccountByIdRepository.loadById(userId)
     const role = await this.loadRoleByIdRepository.loadById(roleId)
     if (account && role) {
-      await this.addRoleToUserRepository.addRoleToUser(data)
+      const updatedAccount = await this.addRoleToUserRepository.addRoleToUser(data)
+      return updatedAccount
     }
     return null
   }
