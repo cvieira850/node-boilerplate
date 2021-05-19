@@ -1,14 +1,23 @@
-import { AddRoleToUser, AddRoleToUserModel, AccountModel, AddRoleToUserRepository, LoadAccountByIdRepository } from './db-add-role-to-user-protocols'
+import {
+  AddRoleToUser,
+  AddRoleToUserModel,
+  AccountModel,
+  AddRoleToUserRepository,
+  LoadAccountByIdRepository,
+  LoadRoleByIdRepository
+} from './db-add-role-to-user-protocols'
 
 export class DbAddRoleToUser implements AddRoleToUser {
   constructor (
     private readonly addRoleToUserRepository: AddRoleToUserRepository,
-    private readonly loadAccountByIdRepository: LoadAccountByIdRepository
+    private readonly loadAccountByIdRepository: LoadAccountByIdRepository,
+    private readonly loadRoleByIdRepository: LoadRoleByIdRepository
   ) {}
 
   async addRoleToUser (data: AddRoleToUserModel): Promise<AccountModel> {
-    const { userId } = data
+    const { userId, roleId } = data
     const account = await this.loadAccountByIdRepository.loadById(userId)
+    await this.loadRoleByIdRepository.loadById(roleId)
     if (account) {
       await this.addRoleToUserRepository.addRoleToUser(data)
     }

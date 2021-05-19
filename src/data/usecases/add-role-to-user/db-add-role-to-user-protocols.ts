@@ -1,4 +1,6 @@
 export * from '../../../domain/models/account'
+export * from '../../../domain/models/role'
 export * from '../../../domain/usecases/add-role-to-user'
 export * from '../../protocols/db/account/add-role-to-user-repository'
 export * from '../../protocols/db/account/load-account-by-id-repository'
+export * from '../../protocols/db/role/load-role-by-id-repository'
