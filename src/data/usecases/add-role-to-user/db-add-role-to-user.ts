@@ -8,8 +8,10 @@ export class DbAddRoleToUser implements AddRoleToUser {
 
   async addRoleToUser (data: AddRoleToUserModel): Promise<AccountModel> {
     const { userId } = data
-    await this.loadAccountByIdRepository.loadById(userId)
-    await this.addRoleToUserRepository.addRoleToUser(data)
-    return new Promise(resolve => resolve(null))
+    const account = await this.loadAccountByIdRepository.loadById(userId)
+    if (account) {
+      await this.addRoleToUserRepository.addRoleToUser(data)
+    }
+    return null
   }
 }
