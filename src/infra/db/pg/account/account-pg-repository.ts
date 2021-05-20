@@ -1,4 +1,5 @@
 
+import { LoadAccountByIdRepository } from '../../../../data/usecases/add-role-to-user/db-add-role-to-user-protocols'
 import { getRepository } from 'typeorm'
 import { AddAccountRepository } from '../../../../data/protocols/db/account/add-account-repository'
 import { LoadAccountByEmailRepository } from '../../../../data/protocols/db/account/load-account-by-email-repository'
@@ -10,7 +11,8 @@ import User from '../typeorm/entities/user'
 export class AccountPgRepository implements
 AddAccountRepository,
 LoadAccountByEmailRepository,
-UpdateAccessTokenRepository {
+UpdateAccessTokenRepository,
+LoadAccountByIdRepository {
   async add (accountData: AddAccountModel): Promise<AccountModel> {
     const userRepository = getRepository(User)
     const userCreated = userRepository.create(accountData)
@@ -32,5 +34,11 @@ UpdateAccessTokenRepository {
     const account = await UserRepository.findOne(id)
     account.access_token = token
     await UserRepository.save(account)
+  }
+
+  async loadById (id: string): Promise<AccountModel> {
+    const userRepository = getRepository(User)
+    await userRepository.findOne(id)
+    return new Promise(resolve => resolve(null))
   }
 }
