@@ -1,7 +1,7 @@
 Node Boilerplate 
 ==================
 
-### Tecnologias
+> ### Tecnologias
 
 * Node/Typescript
 * Express (Framework)
@@ -10,7 +10,7 @@ Node Boilerplate
 * JWT
 * Bcrypt (criptografia para senhas)
   
-### Iniciando o projeto
+> ### Iniciando o projeto
 
 ```bash
   # clonar o projeto
@@ -30,11 +30,7 @@ Node Boilerplate
   #instalar dependências
   yarn install
 ```
-
-ARQUITETURA
-===========
-
-### Environments
+> ### Environments
 
 Ver arquivo .env.test
 
@@ -67,7 +63,7 @@ Ver arquivo .env.test
 | test:ci         | roda os testes gerando o coverage                   |
 | typeorm         | comando utilizado para criar e rodar migrations     |
 
-### Sistema de pasta
+> ### Sistema de pasta
 
 * src: source da api
   * presentation: Controllers
@@ -78,7 +74,7 @@ Ver arquivo .env.test
   * validation: implementação das validações
 * requirements: definição dos requisitos
 
-### Premissas e Responsabilidades
+> ### Premissas e Responsabilidades
 
 * presentation:
   * Porta de entrada de uma rota
@@ -101,7 +97,7 @@ Ver arquivo .env.test
 * validation:
   * Responsável pela definição das validações
 
-### Git 
+> ### Git 
 
 Antes de cada commit ele irá verificar se tem algum erro de eslint ou nos testes,
 isso evita um commit que quebre o ambiente.
@@ -109,7 +105,7 @@ isso evita um commit que quebre o ambiente.
 Para mais informações veja a documentação do 
 [husky](https://github.com/typicode/husky)
 
-### Banco de dados e migrations
+> ### Banco de dados e migrations
   Utilizamos o Typeorm com postgreSQL
 
   Para **criar uma migration** nova basta rodar o comando: *yarn typeorm migration:create -n nomeDaMigration*
