@@ -55,4 +55,22 @@ describe('Account Pg Repository', () => {
     const role = await sut.loadById('d1ffd121-53b5-4364-9f2d-651369faba83')
     expect(role).toBeFalsy()
   })
+
+  test('Should return a role on loadById success', async () => {
+    const sut = makeSut()
+    const createdRole = await getConnection()
+      .createQueryBuilder()
+      .insert()
+      .into(Role)
+      .values(
+        {
+          name: 'valid_name'
+        }
+      )
+      .execute()
+    const role = await sut.loadById(createdRole.generatedMaps[0].id)
+    expect(role).toBeTruthy()
+    expect(role.id).toBeTruthy()
+    expect(role.name).toBe('valid_name')
+  })
 })
