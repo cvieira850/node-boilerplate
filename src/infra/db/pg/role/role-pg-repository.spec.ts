@@ -49,4 +49,10 @@ describe('Account Pg Repository', () => {
     const role = await sut.loadByName('valid_name')
     expect(role).toBeFalsy()
   })
+
+  test('Should return null if loadById fails', async () => {
+    const sut = makeSut()
+    const role = await sut.loadById('d1ffd121-53b5-4364-9f2d-651369faba83')
+    expect(role).toBeFalsy()
+  })
 })
