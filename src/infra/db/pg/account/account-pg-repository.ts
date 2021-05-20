@@ -38,7 +38,10 @@ LoadAccountByIdRepository {
 
   async loadById (id: string): Promise<AccountModel> {
     const userRepository = getRepository(User)
-    await userRepository.findOne(id)
-    return new Promise(resolve => resolve(null))
+    const account = await userRepository.findOne(id)
+    if (account) {
+      return account
+    }
+    return null
   }
 }
