@@ -64,6 +64,28 @@ describe('Account Pg Repository', () => {
     expect(account).toBeFalsy()
   })
 
+  test('Should return an account on loadById success', async () => {
+    const sut = makeSut()
+    const user = await getConnection()
+      .createQueryBuilder()
+      .insert()
+      .into(User)
+      .values(
+        {
+          name: 'valid_name',
+          email: 'valid_email@email.com',
+          password: 'valid_password'
+        }
+      )
+      .execute()
+    const account = await sut.loadById(user.generatedMaps[0].id)
+    expect(account).toBeTruthy()
+    expect(account.id).toBeTruthy()
+    expect(account.name).toBe('valid_name')
+    expect(account.email).toBe('valid_email@email.com')
+    expect(account.password).toBe('valid_password')
+  })
+
   test('Should return an account on updateAccessToken success', async () => {
     const sut = makeSut()
     const res = await getConnection()
