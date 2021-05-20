@@ -1,8 +1,9 @@
+import app from '../config/app'
 import { hash } from 'bcrypt'
 import request from 'supertest'
 import { createConnection, getConnection } from 'typeorm'
 import User from '../../infra/db/pg/typeorm/entities/user'
-import app from '../config/app'
+import Role from '../../infra/db/pg/typeorm/entities/role'
 
 describe('Login Routes', () => {
   beforeEach(async () => {
@@ -58,6 +59,43 @@ describe('Login Routes', () => {
           password: '123'
         })
         .expect(401)
+    })
+  })
+
+  describe('POST /users/role', () => {
+    test('Should return 200 on add role', async () => {
+      const password = await hash('123',12)
+      const res = await getConnection()
+        .createQueryBuilder()
+        .insert()
+        .into(User)
+        .values(
+          {
+            name: 'valid_name',
+            email: 'contato@caiovieira.com.br',
+            password
+          }
+        )
+        .execute()
+      const resRole = await getConnection()
+        .createQueryBuilder()
+        .insert()
+        .into(Role)
+        .values(
+          {
+            name: 'valid_role_name'
+          }
+        )
+        .execute()
+      const fakeAccount = res.generatedMaps[0]
+      const fakeRole = resRole.generatedMaps[0]
+      const response = await request(app)
+        .post('/api/users/role')
+        .send({
+          userId: fakeAccount.id,
+          roleId: fakeRole.id
+        })
+      console.log(response)
     })
   })
 })

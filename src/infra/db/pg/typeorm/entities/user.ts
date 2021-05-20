@@ -15,13 +15,13 @@ class User {
   @PrimaryGeneratedColumn('uuid')
   id: string
 
-  @Column()
+  @Column({ default: null })
   name: string
 
-  @Column()
+  @Column({ default: null })
   email: string
 
-  @Column()
+  @Column({ default: null })
   password: string
 
   @ManyToOne(() => Role, role => role.user_owner, { eager: true })
