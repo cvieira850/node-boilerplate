@@ -1,5 +1,6 @@
 
 import { getConnection, getRepository, createConnection } from 'typeorm'
+import Role from '../typeorm/entities/role'
 import User from '../typeorm/entities/user'
 import { AccountPgRepository } from './account-pg-repository'
 
@@ -109,5 +110,41 @@ describe('Account Pg Repository', () => {
     expect(res).toBeTruthy()
     expect(account.id).toBeTruthy()
     expect(account.access_token).toBe('any_token')
+  })
+
+  test('Should return an account on addRoleToUser success', async () => {
+    const sut = makeSut()
+    const user = await getConnection()
+      .createQueryBuilder()
+      .insert()
+      .into(User)
+      .values(
+        {
+          name: 'valid_name',
+          email: 'valid_email@email.com',
+          password: 'valid_password'
+        }
+      )
+      .execute()
+    const role = await getConnection()
+      .createQueryBuilder()
+      .insert()
+      .into(Role)
+      .values(
+        {
+          name: 'valid_name'
+        }
+      )
+      .execute()
+    const fakeAccount = user.generatedMaps[0]
+    const fakeRole = role.generatedMaps[0]
+    const account = await sut.addRoleToUser({ userId: fakeAccount.id, roleId: fakeRole.id })
+    expect(account).toBeTruthy()
+    expect(account.id).toBeTruthy()
+    expect(account.id).toBe(fakeAccount.id)
+    expect(account.name).toBe('valid_name')
+    expect(account.email).toBe('valid_email@email.com')
+    expect(account.password).toBe('valid_password')
+    expect(account.role_id).toBe(fakeRole.id)
   })
 })

@@ -58,8 +58,7 @@ AddRoleToUserRepository {
     const role = await RoleRepository.findOne(roleId)
     account.role_id = roleId
     account.role = role
-    const updatedAccount = account
-    const updatedAccountResult = await UserRepository.save(updatedAccount)
-    return updatedAccountResult
+    const updatedAccount = await UserRepository.save(account)
+    return updatedAccount
   }
 }
