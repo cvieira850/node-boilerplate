@@ -3,6 +3,10 @@ import { getConnection, getRepository, createConnection } from 'typeorm'
 import User from '../typeorm/entities/user'
 import { AccountPgRepository } from './account-pg-repository'
 
+const makeSut = (): AccountPgRepository => {
+  return new AccountPgRepository()
+}
+
 describe('Account Pg Repository', () => {
   beforeEach(async () => {
     await createConnection()
@@ -12,9 +16,6 @@ describe('Account Pg Repository', () => {
     await getConnection().close()
   })
 
-  const makeSut = (): AccountPgRepository => {
-    return new AccountPgRepository()
-  }
   test('Should return an account on add success', async () => {
     const sut = makeSut()
     const account = await sut.add({
@@ -54,6 +55,12 @@ describe('Account Pg Repository', () => {
   test('Should return null if loadByEmail fails', async () => {
     const sut = makeSut()
     const account = await sut.loadByEmail('valid_email@email.com')
+    expect(account).toBeFalsy()
+  })
+
+  test('Should return null if loadById fails', async () => {
+    const sut = makeSut()
+    const account = await sut.loadById('d1ffd121-53b5-4364-9f2d-651369faba83')
     expect(account).toBeFalsy()
   })
 
