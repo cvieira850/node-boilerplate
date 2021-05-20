@@ -29,7 +29,10 @@ LoadRoleByIdRepository {
 
   async loadById (id: string): Promise<RoleModel> {
     const userRepository = getRepository(Role)
-    await userRepository.findOne(id)
+    const role = await userRepository.findOne(id)
+    if (role) {
+      return role
+    }
     return null
   }
 }
