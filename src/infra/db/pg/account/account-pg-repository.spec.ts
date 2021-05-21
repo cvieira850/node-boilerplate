@@ -164,5 +164,64 @@ describe('Account Pg Repository', () => {
       expect(account.password).toBe('valid_password')
       expect(account.access_token).toBe('valid_token')
     })
+
+    test('Should return an account on loadByToken with role', async () => {
+      const sut = makeSut()
+      const resRole = await getConnection()
+        .createQueryBuilder()
+        .insert()
+        .into(Role)
+        .values({
+          name: 'valid_role_name'
+        })
+        .execute()
+      await getConnection()
+        .createQueryBuilder()
+        .insert()
+        .into(User)
+        .values({
+          name: 'valid_name',
+          email: 'valid_email@email.com',
+          password: 'valid_password',
+          access_token: 'valid_token',
+          role_id: resRole.generatedMaps[0].id
+        })
+        .execute()
+
+      const account = await sut.loadByToken('valid_token','valid_role_name')
+      expect(account).toBeTruthy()
+      expect(account.id).toBeTruthy()
+      expect(account.name).toBe('valid_name')
+      expect(account.email).toBe('valid_email@email.com')
+      expect(account.password).toBe('valid_password')
+      expect(account.access_token).toBe('valid_token')
+    })
+
+    test('Should return null on loadByToken with wrong role', async () => {
+      const sut = makeSut()
+      const resRole = await getConnection()
+        .createQueryBuilder()
+        .insert()
+        .into(Role)
+        .values({
+          name: 'valid_role_name'
+        })
+        .execute()
+      await getConnection()
+        .createQueryBuilder()
+        .insert()
+        .into(User)
+        .values({
+          name: 'valid_name',
+          email: 'valid_email@email.com',
+          password: 'valid_password',
+          access_token: 'valid_token',
+          role_id: resRole.generatedMaps[0].id
+        })
+        .execute()
+
+      const account = await sut.loadByToken('valid_token','valid_role_name2')
+      expect(account).toBeNull()
+    })
   })
 })
