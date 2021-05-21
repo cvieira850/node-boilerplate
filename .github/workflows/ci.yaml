@@ -1,0 +1,22 @@
+name: CI
+on: [pull_request]
+jobs:
+  pull_request:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Get Node.jobs
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14
+      - name: Instalando Dependências
+        run: yarn install
+      - name: Setup PostgreSQL
+        uses: harmon758/postgresql-action@v1.0.0
+        with:
+          postgresql version: 11.5
+          postgresql db: tests
+          postgresql user: docker
+          postgresql password: 123mudar
+      - name: Rodando Testes
+        run: yarn test:ci
