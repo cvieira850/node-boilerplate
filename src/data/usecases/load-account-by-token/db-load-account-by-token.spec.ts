@@ -137,4 +137,10 @@ describe('DbLoadAccountByToken Usecase', () => {
     const account = await sut.loadByToken('any_token','any_role')
     expect(account).toBeNull()
   })
+
+  test('Should returns null if role name is not equal to role' , async () => {
+    const { sut } = makeSut()
+    const account = await sut.loadByToken('any_token','any_role')
+    expect(account).toBeNull()
+  })
 })
