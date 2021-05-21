@@ -34,6 +34,7 @@ const makeLoadRoleByIdRepositoryStub = (): LoadRoleByIdRepository => {
   }
   return new LoadRoleByIdRepositoryStub()
 }
+
 const makeLoadAccountByIdRepositoryStub = (): LoadAccountByIdRepository => {
   class LoadAccountByIdRepositoryStub implements LoadAccountByIdRepository {
     async loadById (userId: string): Promise<AccountModel> {

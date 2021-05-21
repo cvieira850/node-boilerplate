@@ -1,5 +1,7 @@
-import { LoadAccountByTokenRepository } from 'data/protocols/db/account/load-account-by-token-repository'
+import { LoadAccountByTokenRepository } from '../../protocols/db/account/load-account-by-token-repository'
+import { LoadRoleByIdRepository } from '../../protocols/db/role/load-role-by-id-repository'
 import { AccountModel } from '../../../domain/models/account'
+import { RoleModel } from '../../../domain/models/role'
 import { Decrypter } from '../../protocols/cryptography/decrypter'
 import { DbLoadAccountByToken } from './db-load-account-by-token'
 
@@ -11,6 +13,19 @@ const makeFakeAccount = (): AccountModel => ({
   role_id: 'valid_role_id'
 })
 
+const makeFakeRole = (): RoleModel => ({
+  id: 'valid_role_id',
+  name: 'valid_role_name'
+})
+
+const makeLoadRoleByIdRepositoryStub = (): LoadRoleByIdRepository => {
+  class LoadRoleByIdRepositoryStub implements LoadRoleByIdRepository {
+    async loadById (roleId: string): Promise<RoleModel> {
+      return new Promise(resolve => resolve(makeFakeRole()))
+    }
+  }
+  return new LoadRoleByIdRepositoryStub()
+}
 const makeLoadAccountByTokenRepository = (): LoadAccountByTokenRepository => {
   class LoadAccountByTokenRepositoryStub implements LoadAccountByTokenRepository {
     async loadByToken (value: string): Promise<AccountModel> {
@@ -33,16 +48,23 @@ interface SutTypes {
   sut: DbLoadAccountByToken
   decrypterStub: Decrypter
   loadAccountByTokenRepositoryStub: LoadAccountByTokenRepository
+  loadRoleByIdRepositoryStub: LoadRoleByIdRepository
 }
 
 const makeSut = (): SutTypes => {
   const decrypterStub = makeDecrypter()
   const loadAccountByTokenRepositoryStub = makeLoadAccountByTokenRepository()
-  const sut = new DbLoadAccountByToken(decrypterStub,loadAccountByTokenRepositoryStub)
+  const loadRoleByIdRepositoryStub = makeLoadRoleByIdRepositoryStub()
+  const sut = new DbLoadAccountByToken(
+    decrypterStub,
+    loadAccountByTokenRepositoryStub,
+    loadRoleByIdRepositoryStub
+  )
   return {
     sut,
     decrypterStub,
-    loadAccountByTokenRepositoryStub
+    loadAccountByTokenRepositoryStub,
+    loadRoleByIdRepositoryStub
   }
 }
 
@@ -93,5 +115,12 @@ describe('DbLoadAccountByToken Usecase', () => {
     jest.spyOn(loadAccountByTokenRepositoryStub,'loadByToken').mockReturnValueOnce(new Promise((resolve,reject) => reject(new Error())))
     const promise = sut.loadByToken('any_token','any_role')
     await expect(promise).rejects.toThrow()
+  })
+
+  test('Should call LoadRoleByItRepository with correct values' , async () => {
+    const { sut, loadRoleByIdRepositoryStub } = makeSut()
+    const loadByIdSpy = jest.spyOn(loadRoleByIdRepositoryStub,'loadById')
+    await sut.loadByToken('any_token','any_role')
+    expect(loadByIdSpy).toHaveBeenCalledWith('valid_role_id')
   })
 })
