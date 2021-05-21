@@ -223,5 +223,23 @@ describe('Account Pg Repository', () => {
       const account = await sut.loadByToken('valid_token','valid_role_name2')
       expect(account).toBeNull()
     })
+    test('Should return null on loadByToken with invalid role', async () => {
+      const sut = makeSut()
+      await getConnection()
+        .createQueryBuilder()
+        .insert()
+        .into(User)
+        .values({
+          name: 'valid_name',
+          email: 'valid_email@email.com',
+          password: 'valid_password',
+          access_token: 'valid_token',
+          role_id: null
+        })
+        .execute()
+
+      const account = await sut.loadByToken('valid_token','valid_role_name')
+      expect(account).toBeNull()
+    })
   })
 })
