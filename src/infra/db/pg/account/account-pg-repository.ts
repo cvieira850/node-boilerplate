@@ -4,6 +4,7 @@ import { AddAccountRepository } from '../../../../data/protocols/db/account/add-
 import { LoadAccountByEmailRepository } from '../../../../data/protocols/db/account/load-account-by-email-repository'
 import { UpdateAccessTokenRepository } from '../../../../data/protocols/db/account/update-access-token-repository'
 import { AddRoleToUserRepository } from '../../../../data/protocols/db/account/add-role-to-user-repository'
+import { LoadAccountByTokenRepository } from '../../../../data/protocols/db/account/load-account-by-token-repository'
 import { LoadAccountByIdRepository } from '../../../../data/protocols/db/account/load-account-by-id-repository'
 import { AccountModel } from '../../../../domain/models/account'
 import { AddAccountModel } from '../../../../domain/usecases/add-account'
@@ -17,7 +18,8 @@ AddAccountRepository,
 LoadAccountByEmailRepository,
 UpdateAccessTokenRepository,
 LoadAccountByIdRepository,
-AddRoleToUserRepository {
+AddRoleToUserRepository,
+LoadAccountByTokenRepository {
   async add (accountData: AddAccountModel): Promise<AccountModel> {
     const userRepository = getRepository(User)
     const userCreated = userRepository.create(accountData)
@@ -60,5 +62,11 @@ AddRoleToUserRepository {
     account.role = role
     const updatedAccount = await UserRepository.save(account)
     return updatedAccount
+  }
+
+  async loadByToken (token: string, role?: string): Promise<AccountModel> {
+    const UserRepository = getRepository(User)
+    const account = await UserRepository.findOne({ access_token: token })
+    return account
   }
 }
