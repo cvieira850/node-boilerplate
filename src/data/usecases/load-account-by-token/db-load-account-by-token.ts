@@ -18,7 +18,10 @@ export class DbLoadAccountByToken implements LoadAccountByToken {
       if (account) {
         if (role) {
           if (account.role_id) {
-            await this.loadRoleByIdRepository.loadById(account.role_id)
+            const searchedRole = await this.loadRoleByIdRepository.loadById(account.role_id)
+            if (searchedRole?.name === role) {
+              return account
+            }
           }
           return null
         }
