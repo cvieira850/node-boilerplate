@@ -1,7 +1,6 @@
 {
   "name": "node-boilerplate",
   "version": "1.2.2",
-  "main": "index.js",
   "license": "MIT",
   "devDependencies": {
     "@types/bcrypt": "^3.0.0",
