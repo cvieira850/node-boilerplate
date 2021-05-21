@@ -223,6 +223,7 @@ describe('Account Pg Repository', () => {
       const account = await sut.loadByToken('valid_token','valid_role_name2')
       expect(account).toBeNull()
     })
+
     test('Should return null on loadByToken with invalid role', async () => {
       const sut = makeSut()
       await getConnection()
@@ -239,6 +240,11 @@ describe('Account Pg Repository', () => {
         .execute()
 
       const account = await sut.loadByToken('valid_token','valid_role_name')
+      expect(account).toBeNull()
+    })
+    test('Should return null on call loadByToken with invalid token', async () => {
+      const sut = makeSut()
+      const account = await sut.loadByToken('valid_token')
       expect(account).toBeNull()
     })
   })
