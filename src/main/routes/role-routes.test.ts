@@ -12,13 +12,13 @@ describe('Role Routes', () => {
   })
 
   describe('POST /roles', () => {
-    test('Should return 200 on add role success', async () => {
+    test('Should return 403 on add role without access token', async () => {
       await request(app)
         .post('/api/roles')
         .send({
           name: 'any_name'
         })
-        .expect(200)
+        .expect(403)
     })
   })
 })
