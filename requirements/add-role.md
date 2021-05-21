@@ -11,4 +11,5 @@
 01. ✅ Retorna erro 404 se a API não existir
 02. ✅ Retorna erro 400 se **name** não for fornecido pelo client
 03. ✅ Retorna erro 403 se o nome fornecido já estiver criado
-04. ✅ Retorna erro 500 se der erro ao tentar criar a função
+04. ✅ Retorna erro 403 se não passar o access token
+05. ✅ Retorna erro 500 se der erro ao tentar criar a função
