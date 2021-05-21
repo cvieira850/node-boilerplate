@@ -67,6 +67,17 @@ LoadAccountByTokenRepository {
   async loadByToken (token: string, role?: string): Promise<AccountModel> {
     const UserRepository = getRepository(User)
     const account = await UserRepository.findOne({ access_token: token })
-    return account
+    if (account) {
+      if (role) {
+        const RoleRepository = getRepository(Role)
+        const searchedRole = await RoleRepository.findOne({ name: role })
+        if (searchedRole?.id === account.role_id) {
+          return account
+        }
+        return null
+      }
+      return account
+    }
+    return null
   }
 }
