@@ -3,20 +3,12 @@ node_js:
   - 14
 services:
   - postgresql
-addons:
-  postgresql: "11"
-  apt:
-    package:
-      - postgresql-11
-      - postgresql-client-11
 env:
   global:
-    - PGPORT=5432
     - DB_NAME=tests
     - DB_USER=docker
-    - DB_PASSWORD=123mudar
 before_script:
-  - psql -c "CREATE USER ${DB_USER} WITH PASSWORD '${DB_PASSWORD}' ;"
+  - psql -c "CREATE USER ${DB_USER} WITH PASSWORD '123mudar' ;"
   - psql -c 'create database ${DB_NAME} WITH OWNER = ${DB_USER} ;'
 script:
   - eslint 'src/**'
