@@ -3,13 +3,9 @@ node_js:
   - 14
 services:
   - postgresql
-env:
-  global:
-    - DB_NAME=tests
-    - DB_USER=docker
 before_script:
-  - psql -c "CREATE USER ${DB_USER} WITH PASSWORD '123mudar' ;"
-  - psql -c 'create database ${DB_NAME} WITH OWNER = ${DB_USER} ;'
+  - psql -c 'create database tests;' -U postgres
+  - psql -c "CREATE USER docker WITH PASSWORD '123mudar';" -U postgres
 script:
   - eslint 'src/**'
   - yarn test:coveralls
