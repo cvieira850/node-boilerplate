@@ -1,6 +1,7 @@
 {
   "name": "node-boilerplate",
-  "version": "1.2.2",
+  "version": "1.4.0",
+  "author": "Caio Vieira",
   "license": "MIT",
   "devDependencies": {
     "@types/bcrypt": "^3.0.0",
@@ -38,8 +39,7 @@
     "test:integration": "yarn test --watch -c jest-integration-config.js",
     "test:staged": "yarn test --findRelatedTests",
     "test:ci": "yarn test --coverage",
-    "typeorm": "ts-node-dev  -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
-    "test:coveralls": "yarn test:ci && coveralls < coverage/lcov.info"
+    "typeorm": "ts-node-dev  -r tsconfig-paths/register ./node_modules/typeorm/cli.js"
   },
   "dependencies": {
     "bcrypt": "^5.0.1",
