@@ -19,4 +19,4 @@ jobs:
           postgresql user: docker
           postgresql password: 123mudar
       - name: Rodando Testes
-        run: yarn test:ci
+        run: yarn test:coveralls
