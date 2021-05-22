@@ -9,9 +9,15 @@ addons:
     package:
       - postgresql-11
       - postgresql-client-11
+env:
+  global:
+    - PGPORT=5433
+    - DB_NAME=tests
+    - DB_USER=docker
+    - DB_PASSWORD=123mudar
 before_script:
-  - psql -c "CREATE USER docker WITH PASSWORD '123mudar' ;"
-  - psql -c 'create database tests WITH OWNER = docker ;'
+  - psql -c "CREATE USER ${DB_USER} WITH PASSWORD ${DB_PASSWORD} ;"
+  - psql -c 'create database ${DB_NAME} WITH OWNER = ${DB_USER} ;'
 script:
   - eslint 'src/**'
   - yarn test:coveralls
