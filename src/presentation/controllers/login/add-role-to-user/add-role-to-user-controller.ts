@@ -1,6 +1,6 @@
 import { Controller, HttpRequest, HttpResponse, Validation, AddRoleToUser } from './add-role-to-user-protocols'
-import { badRequest, forbidden, ok, serverError } from '../../../helpers/http/http-helper'
-import { InvalidRoleOrUserError } from '../../../errors'
+import { badRequest, forbidden, ok, serverError } from '@/presentation/helpers/http/http-helper'
+import { InvalidRoleOrUserError } from '@/presentation/errors'
 
 export class AddRoleToUserController implements Controller {
   constructor (

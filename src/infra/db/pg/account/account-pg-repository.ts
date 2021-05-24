@@ -1,17 +1,17 @@
 
-import { getRepository } from 'typeorm'
-import { AddAccountRepository } from '../../../../data/protocols/db/account/add-account-repository'
-import { LoadAccountByEmailRepository } from '../../../../data/protocols/db/account/load-account-by-email-repository'
-import { UpdateAccessTokenRepository } from '../../../../data/protocols/db/account/update-access-token-repository'
-import { AddRoleToUserRepository } from '../../../../data/protocols/db/account/add-role-to-user-repository'
-import { LoadAccountByTokenRepository } from '../../../../data/protocols/db/account/load-account-by-token-repository'
-import { LoadAccountByIdRepository } from '../../../../data/protocols/db/account/load-account-by-id-repository'
-import { AccountModel } from '../../../../domain/models/account'
-import { AddAccountModel } from '../../../../domain/usecases/add-account'
-import { AddRoleToUserModel } from '../../../../domain/usecases/add-role-to-user'
+import { AddAccountRepository } from '@/data/protocols/db/account/add-account-repository'
+import { LoadAccountByEmailRepository } from '@/data/protocols/db/account/load-account-by-email-repository'
+import { UpdateAccessTokenRepository } from '@/data/protocols/db/account/update-access-token-repository'
+import { AddRoleToUserRepository } from '@/data/protocols/db/account/add-role-to-user-repository'
+import { LoadAccountByTokenRepository } from '@/data/protocols/db/account/load-account-by-token-repository'
+import { LoadAccountByIdRepository } from '@/data/protocols/db/account/load-account-by-id-repository'
+import { AccountModel } from '@/domain/models/account'
+import { AddAccountModel } from '@/domain/usecases/add-account'
+import { AddRoleToUserModel } from '@/domain/usecases/add-role-to-user'
+import User from '@/infra/db/pg/typeorm/entities/user'
+import Role from '@/infra/db/pg/typeorm/entities/role'
 
-import User from '../typeorm/entities/user'
-import Role from '../typeorm/entities/role'
+import { getRepository } from 'typeorm'
 
 export class AccountPgRepository implements
 AddAccountRepository,

@@ -1,7 +1,7 @@
-import { getConnection, getRepository } from 'typeorm'
-import createConnection from '../typeorm'
-import Error from '../typeorm/entities/error'
 import { LogPgRepository } from './log-pg-repository'
+import createConnection from '@/infra/db/pg/typeorm'
+import Error from '@/infra/db/pg/typeorm/entities/error'
+import { getConnection, getRepository } from 'typeorm'
 
 const makeSut = (): LogPgRepository => {
   return new LogPgRepository()

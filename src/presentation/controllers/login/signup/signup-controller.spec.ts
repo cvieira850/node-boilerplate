@@ -1,8 +1,8 @@
 import { SignUpController } from './signup-controller'
-import { MissingParamError, ServerError, EmailInUseError } from '../../../errors'
 import { AccountModel,AddAccount,AddAccountModel,Validation, Authentication, AuthenticationModel } from './signup-controller-protocols'
-import { HttpRequest } from '../../../protocols'
-import { badRequest, forbidden, ok, serverError } from '../../../helpers/http/http-helper'
+import { HttpRequest } from '@/presentation/protocols'
+import { MissingParamError, ServerError, EmailInUseError } from '@/presentation/errors'
+import { badRequest, forbidden, ok, serverError } from '@/presentation/helpers/http/http-helper'
 
 const MakeFakeAccount = (): AccountModel => ({
   id: 'valid_id',

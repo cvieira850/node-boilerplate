@@ -16,12 +16,12 @@ module.exports = {
   entities: [
     (NODE_ENV !== 'prod')
       ? `${__dirname}/src/infra/db/pg/typeorm/entities/*.ts`
-      : `${__dirname}/dist/src/infra/db/pg/typeorm/entities/*.js`
+      : `${__dirname}/dist/infra/db/pg/typeorm/entities/*.js`
   ],
   migrations: [
     (NODE_ENV !== 'prod')
       ? `${__dirname}/src/infra/db/pg/typeorm/migrations/*.ts`
-      : `${__dirname}/dist/src/infra/db/pg/typeorm/migrations/*.js`
+      : `${__dirname}/dist/infra/db/pg/typeorm/migrations/*.js`
   ],
   cli: {
     migrationsDir: `${__dirname}/src/infra/db/pg/typeorm/migrations`,

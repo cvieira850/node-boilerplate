@@ -1,6 +1,5 @@
-import { AddRoleModel, AddRoleRepository, RoleModel } from './db-add-role-protocols'
+import { AddRoleModel, AddRoleRepository, RoleModel, LoadRoleByNameRepository } from './db-add-role-protocols'
 import { DbAddRole } from './db-add-role'
-import { LoadRoleByNameRepository } from '../../protocols/db/role/load-role-by-name-repository'
 
 const makeFakeRoleData = (): AddRoleModel => ({
   name: 'any_name'

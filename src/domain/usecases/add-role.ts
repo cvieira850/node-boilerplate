@@ -1,4 +1,4 @@
-import { RoleModel } from '../models/role'
+import { RoleModel } from '@/domain/models/role'
 
 export interface AddRoleModel {
   name: string

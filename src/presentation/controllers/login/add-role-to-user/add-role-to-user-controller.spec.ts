@@ -1,7 +1,7 @@
-import { Validation, AccountModel, AddRoleToUser, AddRoleToUserModel, HttpRequest } from './add-role-to-user-protocols'
 import { AddRoleToUserController } from './add-role-to-user-controller'
-import { badRequest, forbidden, ok, serverError } from '../../../helpers/http/http-helper'
-import { InvalidRoleOrUserError } from '../../../errors'
+import { Validation, AccountModel, AddRoleToUser, AddRoleToUserModel, HttpRequest } from './add-role-to-user-protocols'
+import { badRequest, forbidden, ok, serverError } from '@/presentation/helpers/http/http-helper'
+import { InvalidRoleOrUserError } from '@/presentation/errors'
 
 const makeFakeAccount = (): AccountModel => ({
   id: 'valid_user_id',

@@ -1,9 +1,9 @@
-import app from '../config/app'
+import app from '@/main/config/app'
+import User from '@/infra/db/pg/typeorm/entities/user'
+import Role from '@/infra/db/pg/typeorm/entities/role'
 import { hash } from 'bcrypt'
 import request from 'supertest'
 import { createConnection, getConnection } from 'typeorm'
-import User from '../../infra/db/pg/typeorm/entities/user'
-import Role from '../../infra/db/pg/typeorm/entities/role'
 
 describe('Login Routes', () => {
   beforeEach(async () => {

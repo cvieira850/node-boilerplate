@@ -1,6 +1,6 @@
 
+import Role from '@/infra/db/pg/typeorm/entities/role'
 import { getConnection, createConnection } from 'typeorm'
-import Role from '../typeorm/entities/role'
 
 import { RolePgRepository } from './role-pg-repository'
 

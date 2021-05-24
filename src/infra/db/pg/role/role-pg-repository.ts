@@ -1,10 +1,10 @@
 
-import { AddRoleRepository } from '../../../../data/protocols/db/role/add-role-repository'
-import { LoadRoleByNameRepository } from '../../../../data/usecases/add-role/db-add-role-protocols'
-import { LoadRoleByIdRepository } from '../../../../data/usecases/add-role-to-user/db-add-role-to-user-protocols'
-import { AddRoleModel } from '../../../../domain/usecases/add-role'
-import { RoleModel } from '../../../../domain/models/role'
-import Role from '../typeorm/entities/role'
+import { AddRoleRepository } from '@/data/protocols/db/role/add-role-repository'
+import { LoadRoleByNameRepository } from '@/data/usecases/add-role/db-add-role-protocols'
+import { LoadRoleByIdRepository } from '@/data/usecases/add-role-to-user/db-add-role-to-user-protocols'
+import { AddRoleModel } from '@/domain/usecases/add-role'
+import { RoleModel } from '@/domain/models/role'
+import Role from '@/infra/db/pg/typeorm/entities/role'
 import { getRepository } from 'typeorm'
 
 export class RolePgRepository implements

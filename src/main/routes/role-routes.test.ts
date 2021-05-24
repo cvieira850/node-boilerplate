@@ -1,8 +1,8 @@
+import app from '@/main/config/app'
+import User from '@/infra/db/pg/typeorm/entities/user'
+import { hash } from 'bcrypt'
 import request from 'supertest'
 import { sign } from 'jsonwebtoken'
-import { hash } from 'bcrypt'
-import User from '../../infra/db/pg/typeorm/entities/user'
-import app from '../config/app'
 import { createConnection, getConnection, getRepository } from 'typeorm'
 
 describe('Role Routes', () => {

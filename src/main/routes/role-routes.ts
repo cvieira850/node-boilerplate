@@ -1,8 +1,8 @@
+import { makeAuthMiddleware } from '@/main/factories/middlewares/auth-middleware-factory'
+import { makeAddRoleController } from '@/main/factories/controllers/role/add-role-controller-factory'
+import { adaptMiddleware } from '@/main/adapters/express-middleware-adapter'
+import { adaptRoute } from '@/main/adapters/express-route-adapter'
 import { Router } from 'express'
-import { makeAuthMiddleware } from '../factories/middlewares/auth-middleware-factory'
-import { makeAddRoleController } from '../factories/controllers/role/add-role-controller-factory'
-import { adaptMiddleware } from '../adapters/express-middleware-adapter'
-import { adaptRoute } from '../adapters/express-route-adapter'
 
 export default (router: Router): void => {
   const auth = adaptMiddleware(makeAuthMiddleware())

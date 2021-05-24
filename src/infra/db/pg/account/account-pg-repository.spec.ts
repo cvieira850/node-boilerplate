@@ -1,8 +1,8 @@
 
-import { getConnection, getRepository, createConnection } from 'typeorm'
-import Role from '../typeorm/entities/role'
-import User from '../typeorm/entities/user'
 import { AccountPgRepository } from './account-pg-repository'
+import Role from '@/infra/db/pg/typeorm/entities/role'
+import User from '@/infra/db/pg/typeorm/entities/user'
+import { getConnection, getRepository, createConnection } from 'typeorm'
 
 interface AccountData {
   name: string

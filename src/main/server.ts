@@ -1,5 +1,6 @@
+import 'module-alias/register'
 import './config/env'
-import createConnection from '../infra/db/pg/typeorm/index'
+import createConnection from '@/infra/db/pg/typeorm'
 
 createConnection().then(async () => {
   const app = (await import ('./config/app')).default
