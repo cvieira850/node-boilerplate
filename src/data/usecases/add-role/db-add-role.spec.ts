@@ -28,7 +28,7 @@ const makeLoadRoleByNameRepository = (): LoadRoleByNameRepository => {
   return new LoadRoleByNameRepositoryStub()
 }
 
-interface SutTypes {
+type SutTypes = {
   sut: DbAddRole
   addRoleRepositoryStub: AddRoleRepository
   loadRoleByNameRepositoryStub: LoadRoleByNameRepository

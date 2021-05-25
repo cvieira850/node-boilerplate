@@ -53,7 +53,7 @@ const makeAddRoleToUserRepository = (): AddRoleToUserRepository => {
   return new AddRoleToUserRepositoryStub()
 }
 
-interface SutTypes {
+type SutTypes = {
   sut: DbAddRoleToUser
   addRoleToUserRepositoryStub: AddRoleToUserRepository
   loadAccountByIdRepositoryStub: LoadAccountByIdRepository

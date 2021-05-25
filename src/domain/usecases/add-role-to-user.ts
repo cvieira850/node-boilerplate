@@ -1,6 +1,6 @@
 import { AccountModel } from '@/domain/models/account'
 
-export interface AddRoleToUserModel {
+export type AddRoleToUserModel = {
   userId: string
   roleId: string
 }

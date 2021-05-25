@@ -1,6 +1,6 @@
 import { RoleModel } from '@/domain/models/role'
 
-export interface AddRoleModel {
+export type AddRoleModel = {
   name: string
 }
 

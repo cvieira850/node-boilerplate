@@ -42,7 +42,7 @@ const MakeFakeAccount = (): AccountModel => ({
 
 })
 
-interface SutTypes {
+type SutTypes = {
   sut: DbAddAccount
   hashStub: Hash
   addAccountRepositoryStub: AddAccountRepository
