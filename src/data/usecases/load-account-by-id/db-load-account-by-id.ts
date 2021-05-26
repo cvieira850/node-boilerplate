@@ -5,7 +5,7 @@ import { LoadAccountById } from '@/domain/usecases/load-account-by-id'
 export class DbLoadAccountById implements LoadAccountById {
   constructor (private readonly loadAccountByIdRepository: LoadAccountByIdRepository) {}
   async loadById (userId: string): Promise<AccountModel> {
-    await this.loadAccountByIdRepository.loadById(userId)
-    return null
+    const account = await this.loadAccountByIdRepository.loadById(userId)
+    return account
   }
 }
