@@ -6,8 +6,8 @@ import { AddRoleToUserRepository } from '@/data/protocols/db/account/add-role-to
 import { LoadAccountByTokenRepository } from '@/data/protocols/db/account/load-account-by-token-repository'
 import { LoadAccountByIdRepository } from '@/data/protocols/db/account/load-account-by-id-repository'
 import { AccountModel } from '@/domain/models/account'
-import { AddAccountModel } from '@/domain/usecases/add-account'
-import { AddRoleToUserModel } from '@/domain/usecases/add-role-to-user'
+import { AddAccountModel } from '@/domain/usecases/account/add-account'
+import { AddRoleToUserModel } from '@/domain/usecases/account/add-role-to-user'
 import User from '@/infra/db/pg/typeorm/entities/user'
 import Role from '@/infra/db/pg/typeorm/entities/role'
 

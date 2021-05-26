@@ -1,8 +1,8 @@
 
 import { AddRoleRepository } from '@/data/protocols/db/role/add-role-repository'
-import { LoadRoleByNameRepository } from '@/data/usecases/add-role/db-add-role-protocols'
-import { LoadRoleByIdRepository } from '@/data/usecases/add-role-to-user/db-add-role-to-user-protocols'
-import { AddRoleModel } from '@/domain/usecases/add-role'
+import { LoadRoleByNameRepository } from '@/data/usecases/role/add-role/db-add-role-protocols'
+import { LoadRoleByIdRepository } from '@/data/usecases/role/add-role-to-user/db-add-role-to-user-protocols'
+import { AddRoleModel } from '@/domain/usecases/role/add-role'
 import { RoleModel } from '@/domain/models/role'
 import Role from '@/infra/db/pg/typeorm/entities/role'
 import { getRepository } from 'typeorm'

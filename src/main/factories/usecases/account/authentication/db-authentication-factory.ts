@@ -1,5 +1,5 @@
 import '@/main/config/env'
-import { DbAuthentication } from '@/data/usecases/authentication/db-authentication'
+import { DbAuthentication } from '@/data/usecases/account/authentication/db-authentication'
 import { AccountPgRepository } from '@/infra/db/pg/account/account-pg-repository'
 import { BcryptAdapter } from '@/infra/cryptography/bcrypt-adapter/bcrypt-adapter'
 import { JwtAdapter } from '@/infra/cryptography/jwt-adapter/jwt-adapter'
