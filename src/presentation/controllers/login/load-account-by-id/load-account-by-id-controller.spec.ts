@@ -1,5 +1,7 @@
 import { LoadAccountByIdController } from './load-account-by-id-controller'
 import { HttpRequest, LoadAccountById, AccountModel } from './load-account-by-id-protocols'
+import { InvalidParamError } from '@/presentation/errors'
+import { forbidden } from '@/presentation/helpers/http/http-helper'
 
 const makeFakeRequest = (): HttpRequest => ({
   params: {
@@ -44,5 +46,12 @@ describe('LoadAccountById Controller', () => {
     const loadByIdSpy = jest.spyOn(loadAccountByIdStub,'loadById')
     await sut.handle(makeFakeRequest())
     expect(loadByIdSpy).toHaveBeenCalledWith('valid_user_id')
+  })
+
+  test('Should return 403 if LoadAccountById returns null', async () => {
+    const { sut,loadAccountByIdStub } = makeSut()
+    jest.spyOn(loadAccountByIdStub,'loadById').mockReturnValueOnce(new Promise(resolve => resolve(null)))
+    const httpResponse = await sut.handle(makeFakeRequest())
+    expect(httpResponse).toEqual(forbidden(new InvalidParamError('userId')))
   })
 })
