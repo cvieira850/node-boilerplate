@@ -1,7 +1,7 @@
 import { LoadAccountByIdController } from './load-account-by-id-controller'
 import { HttpRequest, LoadAccountById, AccountModel } from './load-account-by-id-protocols'
 import { InvalidParamError } from '@/presentation/errors'
-import { forbidden, serverError } from '@/presentation/helpers/http/http-helper'
+import { forbidden, ok, serverError } from '@/presentation/helpers/http/http-helper'
 
 const makeFakeHttpRequest = (): HttpRequest => ({
   params: {
@@ -60,5 +60,11 @@ describe('LoadAccountById Controller', () => {
     jest.spyOn(loadAccountByIdStub,'loadById').mockReturnValueOnce(new Promise((resolve,reject) => reject(new Error())))
     const httpResponse = await sut.handle(makeFakeHttpRequest())
     expect(httpResponse).toEqual(serverError(new Error()))
+  })
+
+  test('Should return 200 if LoadAccountById succeeds', async () => {
+    const { sut } = makeSut()
+    const httpResponse = await sut.handle(makeFakeHttpRequest())
+    expect(httpResponse).toEqual(ok(makeFakeAccount()))
   })
 })
