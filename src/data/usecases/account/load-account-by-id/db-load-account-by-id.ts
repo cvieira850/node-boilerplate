@@ -1,6 +1,4 @@
-import { LoadAccountByIdRepository } from '@/data/protocols/db/account/load-account-by-id-repository'
-import { AccountModel } from '@/domain/models/account'
-import { LoadAccountById } from '@/domain/usecases/account/load-account-by-id'
+import { LoadAccountByIdRepository, AccountModel, LoadAccountById } from './db-load-account-by-id-protocols'
 
 export class DbLoadAccountById implements LoadAccountById {
   constructor (private readonly loadAccountByIdRepository: LoadAccountByIdRepository) {}

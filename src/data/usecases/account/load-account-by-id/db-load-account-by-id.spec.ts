@@ -1,6 +1,5 @@
 import { DbLoadAccountById } from './db-load-account-by-id'
-import { LoadAccountByIdRepository } from '@/data/protocols/db/account/load-account-by-id-repository'
-import { AccountModel } from '@/domain/models/account'
+import { LoadAccountByIdRepository, AccountModel } from './db-load-account-by-id-protocols'
 
 const makeFakeAccount = (): AccountModel => ({
   id: 'valid_user_id',
