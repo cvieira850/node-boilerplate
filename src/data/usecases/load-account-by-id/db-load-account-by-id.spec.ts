@@ -49,4 +49,10 @@ describe('DbLoadAccountById Usecase', () => {
     const promise = sut.loadById('valid_user_id')
     await expect(promise).rejects.toThrow()
   })
+
+  test('Should return an account on success' , async () => {
+    const { sut } = makeSut()
+    const account = await sut.loadById('valid_user_id')
+    expect(account).toEqual(makeFakeAccount())
+  })
 })
