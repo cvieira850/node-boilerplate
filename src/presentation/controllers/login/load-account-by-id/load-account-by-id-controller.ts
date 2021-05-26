@@ -1,5 +1,5 @@
 import { InvalidParamError } from '@/presentation/errors'
-import { forbidden, serverError } from '@/presentation/helpers/http/http-helper'
+import { forbidden, ok, serverError } from '@/presentation/helpers/http/http-helper'
 import { Controller, HttpRequest, HttpResponse, LoadAccountById } from './load-account-by-id-protocols'
 
 export class LoadAccountByIdController implements Controller {
@@ -10,7 +10,7 @@ export class LoadAccountByIdController implements Controller {
       if (!user) {
         return forbidden(new InvalidParamError('userId'))
       }
-      return null
+      return ok(user)
     } catch (error) {
       return serverError(error)
     }
