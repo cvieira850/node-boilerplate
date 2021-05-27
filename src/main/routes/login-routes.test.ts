@@ -98,4 +98,12 @@ describe('Login Routes', () => {
       console.log(response)
     })
   })
+
+  describe('GET /users/:userId', () => {
+    test('Should return 403 on load account by id without access token', async () => {
+      await request(app)
+        .get('/api/users/any_id')
+        .expect(403)
+    })
+  })
 })
