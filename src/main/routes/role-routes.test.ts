@@ -44,7 +44,6 @@ describe('Role Routes', () => {
       const user = await UserRepository.findOne({ id: id })
       user.access_token = accessToken
       await UserRepository.save(user)
-      console.log(user,accessToken)
       await request(app)
         .post('/api/roles')
         .set('x-access-token', accessToken)

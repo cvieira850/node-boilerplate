@@ -3,7 +3,8 @@ import User from '@/infra/db/pg/typeorm/entities/user'
 import Role from '@/infra/db/pg/typeorm/entities/role'
 import { hash } from 'bcrypt'
 import request from 'supertest'
-import { createConnection, getConnection } from 'typeorm'
+import { createConnection, getConnection, getRepository } from 'typeorm'
+import { sign } from 'jsonwebtoken'
 
 describe('Login Routes', () => {
   beforeEach(async () => {
@@ -104,6 +105,33 @@ describe('Login Routes', () => {
       await request(app)
         .get('/api/users/any_id')
         .expect(403)
+    })
+
+    test('Should return 200 on load account by id', async () => {
+      const password = await hash('123',12)
+      const res = await getConnection()
+        .createQueryBuilder()
+        .insert()
+        .into(User)
+        .values(
+          {
+            name: 'valid_name',
+            email: 'contato@caiovieira.com.br',
+            password
+          }
+        )
+        .execute()
+      const id: string = res.generatedMaps[0].id
+      const accessToken = sign(id,process.env.JWT_SECRET)
+      const UserRepository = getRepository(User)
+      const user = await UserRepository.findOne({ id: id })
+      user.access_token = accessToken
+      await UserRepository.save(user)
+      console.log(id)
+      await request(app)
+        .get(`/api/users/${id}`)
+        .set('x-access-token', accessToken)
+        .expect(200)
     })
   })
 })
