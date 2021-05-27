@@ -119,3 +119,4 @@ Para mais informações veja a documentação do
 2. [Login](./requirements/login.md)
 3. [AddRole](./requirements/add-role.md)
 4. [AddRoleToUser](./requirements/add-role-to-user.md)
+5. [LoadAccountById](./requirements/load-account-by-id.md)
