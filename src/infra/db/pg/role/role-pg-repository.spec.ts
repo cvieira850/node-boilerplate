@@ -1,4 +1,5 @@
 
+import { mockAddRoleParams } from '@/domain/test'
 import Role from '@/infra/db/pg/typeorm/entities/role'
 import { getConnection, createConnection } from 'typeorm'
 
@@ -18,9 +19,7 @@ describe('Account Pg Repository', () => {
   }
   test('Should return a role on add success', async () => {
     const sut = makeSut()
-    const role = await sut.add({
-      name: 'any_name'
-    })
+    const role = await sut.add(mockAddRoleParams())
     expect(role).toBeTruthy()
     expect(role.id).toBeTruthy()
     expect(role.name).toBe('any_name')
@@ -32,21 +31,17 @@ describe('Account Pg Repository', () => {
       .createQueryBuilder()
       .insert()
       .into(Role)
-      .values(
-        {
-          name: 'valid_name'
-        }
-      )
+      .values(mockAddRoleParams())
       .execute()
-    const role = await sut.loadByName('valid_name')
+    const role = await sut.loadByName('any_name')
     expect(role).toBeTruthy()
     expect(role.id).toBeTruthy()
-    expect(role.name).toBe('valid_name')
+    expect(role.name).toBe('any_name')
   })
 
   test('Should return null if loadByName fails', async () => {
     const sut = makeSut()
-    const role = await sut.loadByName('valid_name')
+    const role = await sut.loadByName('any_name')
     expect(role).toBeFalsy()
   })
 
@@ -62,15 +57,11 @@ describe('Account Pg Repository', () => {
       .createQueryBuilder()
       .insert()
       .into(Role)
-      .values(
-        {
-          name: 'valid_name'
-        }
-      )
+      .values(mockAddRoleParams())
       .execute()
     const role = await sut.loadById(createdRole.generatedMaps[0].id)
     expect(role).toBeTruthy()
     expect(role.id).toBeTruthy()
-    expect(role.name).toBe('valid_name')
+    expect(role.name).toBe('any_name')
   })
 })

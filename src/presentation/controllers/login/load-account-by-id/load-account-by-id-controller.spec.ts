@@ -1,30 +1,15 @@
 import { LoadAccountByIdController } from './load-account-by-id-controller'
-import { HttpRequest, LoadAccountById, AccountModel } from './load-account-by-id-protocols'
+import { HttpRequest, LoadAccountById } from './load-account-by-id-protocols'
 import { InvalidParamError } from '@/presentation/errors'
 import { forbidden, ok, serverError } from '@/presentation/helpers/http/http-helper'
+import { throwError, mockAccountModel } from '@/domain/test'
+import { mockLoadAccountById } from '@/presentation/test/mock-load-account-by-id'
 
-const makeFakeHttpRequest = (): HttpRequest => ({
+const mockRequest = (): HttpRequest => ({
   params: {
     userId: 'valid_user_id'
   }
 })
-
-const makeFakeAccount = (): AccountModel => ({
-  id: 'valid_user_id',
-  name: 'valid_name',
-  email: 'valid_email@mail.com',
-  password: 'valid_password',
-  role_id: 'valid_role_id'
-})
-
-const makeLoadAccountById = (): LoadAccountById => {
-  class LoadAccountByIdStub implements LoadAccountById {
-    async loadById (id: string): Promise<AccountModel> {
-      return new Promise(resolve => resolve(makeFakeAccount()))
-    }
-  }
-  return new LoadAccountByIdStub()
-}
 
 type SutTypes = {
   sut: LoadAccountByIdController
@@ -32,7 +17,7 @@ type SutTypes = {
 }
 
 const makeSut = (): SutTypes => {
-  const loadAccountByIdStub = makeLoadAccountById()
+  const loadAccountByIdStub = mockLoadAccountById()
   const sut = new LoadAccountByIdController(loadAccountByIdStub)
   return {
     sut,
@@ -44,27 +29,27 @@ describe('LoadAccountById Controller', () => {
   test('Should call LoadAccountById with correct id', async () => {
     const { sut,loadAccountByIdStub } = makeSut()
     const loadByIdSpy = jest.spyOn(loadAccountByIdStub,'loadById')
-    await sut.handle(makeFakeHttpRequest())
+    await sut.handle(mockRequest())
     expect(loadByIdSpy).toHaveBeenCalledWith('valid_user_id')
   })
 
   test('Should return 403 if LoadAccountById returns null', async () => {
     const { sut,loadAccountByIdStub } = makeSut()
     jest.spyOn(loadAccountByIdStub,'loadById').mockReturnValueOnce(new Promise(resolve => resolve(null)))
-    const httpResponse = await sut.handle(makeFakeHttpRequest())
+    const httpResponse = await sut.handle(mockRequest())
     expect(httpResponse).toEqual(forbidden(new InvalidParamError('userId')))
   })
 
   test('Should return 500 if LoadAccountById throws', async () => {
     const { sut, loadAccountByIdStub } = makeSut()
-    jest.spyOn(loadAccountByIdStub,'loadById').mockReturnValueOnce(new Promise((resolve,reject) => reject(new Error())))
-    const httpResponse = await sut.handle(makeFakeHttpRequest())
+    jest.spyOn(loadAccountByIdStub,'loadById').mockImplementationOnce(throwError)
+    const httpResponse = await sut.handle(mockRequest())
     expect(httpResponse).toEqual(serverError(new Error()))
   })
 
   test('Should return 200 if LoadAccountById succeeds', async () => {
     const { sut } = makeSut()
-    const httpResponse = await sut.handle(makeFakeHttpRequest())
-    expect(httpResponse).toEqual(ok(makeFakeAccount()))
+    const httpResponse = await sut.handle(mockRequest())
+    expect(httpResponse).toEqual(ok(mockAccountModel()))
   })
 })

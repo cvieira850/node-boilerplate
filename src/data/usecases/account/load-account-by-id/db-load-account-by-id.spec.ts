@@ -1,22 +1,7 @@
 import { DbLoadAccountById } from './db-load-account-by-id'
-import { LoadAccountByIdRepository, AccountModel } from './db-load-account-by-id-protocols'
-
-const makeFakeAccount = (): AccountModel => ({
-  id: 'valid_user_id',
-  name: 'valid_name',
-  email: 'valid_email@mail.com',
-  password: 'hashed_password',
-  role_id: 'valid_role_id'
-})
-
-const makeLoadAccountByIdRepository = (): LoadAccountByIdRepository => {
-  class LoadAccountByIdRepositoryStub implements LoadAccountByIdRepository {
-    async loadById (userId: string): Promise<AccountModel> {
-      return new Promise(resolve => resolve(makeFakeAccount()))
-    }
-  }
-  return new LoadAccountByIdRepositoryStub()
-}
+import { LoadAccountByIdRepository } from './db-load-account-by-id-protocols'
+import { throwError, mockAccountModel } from '@/domain/test'
+import { mockLoadAccountByIdRepository } from '@/data/test'
 
 type SutTypes = {
   sut: DbLoadAccountById
@@ -24,7 +9,7 @@ type SutTypes = {
 }
 
 const makeSut = (): SutTypes => {
-  const loadAccountByIdRepositoryStub = makeLoadAccountByIdRepository()
+  const loadAccountByIdRepositoryStub = mockLoadAccountByIdRepository()
   const sut = new DbLoadAccountById(
     loadAccountByIdRepositoryStub
   )
@@ -44,7 +29,7 @@ describe('DbLoadAccountById Usecase', () => {
 
   test('Should throw if LoadAccountByIdRepository throws', async () => {
     const { sut, loadAccountByIdRepositoryStub } = makeSut()
-    jest.spyOn(loadAccountByIdRepositoryStub,'loadById').mockReturnValueOnce(new Promise((resolve,reject) => reject(new Error())))
+    jest.spyOn(loadAccountByIdRepositoryStub,'loadById').mockImplementationOnce(throwError)
     const promise = sut.loadById('valid_user_id')
     await expect(promise).rejects.toThrow()
   })
@@ -52,6 +37,6 @@ describe('DbLoadAccountById Usecase', () => {
   test('Should return an account on success' , async () => {
     const { sut } = makeSut()
     const account = await sut.loadById('valid_user_id')
-    expect(account).toEqual(makeFakeAccount())
+    expect(account).toEqual(mockAccountModel())
   })
 })
