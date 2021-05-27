@@ -1,5 +1,5 @@
 import { AddRoleController } from './add-role-controller'
-import { HttpRequest, Validation, RoleModel, AddRole, AddRoleModel } from './add-role-controller-protocols'
+import { HttpRequest, Validation, RoleModel, AddRole, AddRoleParams } from './add-role-controller-protocols'
 import { badRequest, forbidden, ok, serverError } from '@/presentation/helpers/http/http-helper'
 import { RoleIsAlreadyRegisteredError } from '@/presentation/errors'
 
@@ -25,7 +25,7 @@ const makeValidation = (): Validation => {
 
 const makeAddRole = (): AddRole => {
   class AddRoleStub implements AddRole {
-    async add (data: AddRoleModel): Promise<RoleModel> {
+    async add (data: AddRoleParams): Promise<RoleModel> {
       return new Promise(resolve => resolve(makeFakeRole()))
     }
   }

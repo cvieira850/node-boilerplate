@@ -1,7 +1,7 @@
-import { AddRoleModel, AddRoleRepository, RoleModel, LoadRoleByNameRepository } from './db-add-role-protocols'
+import { AddRoleParams, AddRoleRepository, RoleModel, LoadRoleByNameRepository } from './db-add-role-protocols'
 import { DbAddRole } from './db-add-role'
 
-const makeFakeRoleData = (): AddRoleModel => ({
+const makeFakeRoleData = (): AddRoleParams => ({
   name: 'any_name'
 })
 
@@ -12,7 +12,7 @@ const makeFakeRole = (): RoleModel => ({
 
 const makeAddRoleRepository = (): AddRoleRepository => {
   class AddRoleRepositoryStub implements AddRoleRepository {
-    async add (roleData: AddRoleModel): Promise<RoleModel> {
+    async add (roleData: AddRoleParams): Promise<RoleModel> {
       return new Promise(resolve => resolve(makeFakeRole()))
     }
   }

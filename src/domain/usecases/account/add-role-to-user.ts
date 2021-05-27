@@ -1,10 +1,10 @@
 import { AccountModel } from '@/domain/models/account'
 
-export type AddRoleToUserModel = {
+export type AddRoleToUserParams = {
   userId: string
   roleId: string
 }
 
 export interface AddRoleToUser {
-  addRoleToUser: (data: AddRoleToUserModel) => Promise<AccountModel>
+  addRoleToUser: (data: AddRoleToUserParams) => Promise<AccountModel>
 }

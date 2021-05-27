@@ -1,6 +1,6 @@
 import { DbAddRoleToUser } from './db-add-role-to-user'
 import {
-  AddRoleToUserModel,
+  AddRoleToUserParams,
   RoleModel,
   AccountModel,
   AddRoleToUserRepository,
@@ -8,7 +8,7 @@ import {
   LoadRoleByIdRepository
 } from './db-add-role-to-user-protocols'
 
-const makeFakeAddRoleToUserData = (): AddRoleToUserModel => ({
+const makeFakeAddRoleToUserData = (): AddRoleToUserParams => ({
   userId: 'valid_user_id',
   roleId: 'valid_role_id'
 })
@@ -46,7 +46,7 @@ const makeLoadAccountByIdRepositoryStub = (): LoadAccountByIdRepository => {
 
 const makeAddRoleToUserRepository = (): AddRoleToUserRepository => {
   class AddRoleToUserRepositoryStub implements AddRoleToUserRepository {
-    async addRoleToUser (data: AddRoleToUserModel): Promise<AccountModel> {
+    async addRoleToUser (data: AddRoleToUserParams): Promise<AccountModel> {
       return new Promise(resolve => resolve(makeFakeAccount()))
     }
   }

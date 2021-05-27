@@ -6,8 +6,8 @@ import { AddRoleToUserRepository } from '@/data/protocols/db/account/add-role-to
 import { LoadAccountByTokenRepository } from '@/data/protocols/db/account/load-account-by-token-repository'
 import { LoadAccountByIdRepository } from '@/data/protocols/db/account/load-account-by-id-repository'
 import { AccountModel } from '@/domain/models/account'
-import { AddAccountModel } from '@/domain/usecases/account/add-account'
-import { AddRoleToUserModel } from '@/domain/usecases/account/add-role-to-user'
+import { AddAccountParams } from '@/domain/usecases/account/add-account'
+import { AddRoleToUserParams } from '@/domain/usecases/account/add-role-to-user'
 import User from '@/infra/db/pg/typeorm/entities/user'
 import Role from '@/infra/db/pg/typeorm/entities/role'
 
@@ -20,7 +20,7 @@ UpdateAccessTokenRepository,
 LoadAccountByIdRepository,
 AddRoleToUserRepository,
 LoadAccountByTokenRepository {
-  async add (accountData: AddAccountModel): Promise<AccountModel> {
+  async add (accountData: AddAccountParams): Promise<AccountModel> {
     const userRepository = getRepository(User)
     const userCreated = userRepository.create(accountData)
     const account = await userRepository.save(userCreated)
@@ -52,7 +52,7 @@ LoadAccountByTokenRepository {
     return null
   }
 
-  async addRoleToUser (data: AddRoleToUserModel): Promise<AccountModel> {
+  async addRoleToUser (data: AddRoleToUserParams): Promise<AccountModel> {
     const { userId, roleId } = data
     const UserRepository = getRepository(User)
     const RoleRepository = getRepository(Role)

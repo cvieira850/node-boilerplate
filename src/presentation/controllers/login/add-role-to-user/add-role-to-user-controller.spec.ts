@@ -1,5 +1,5 @@
 import { AddRoleToUserController } from './add-role-to-user-controller'
-import { Validation, AccountModel, AddRoleToUser, AddRoleToUserModel, HttpRequest } from './add-role-to-user-protocols'
+import { Validation, AccountModel, AddRoleToUser, AddRoleToUserParams, HttpRequest } from './add-role-to-user-protocols'
 import { badRequest, forbidden, ok, serverError } from '@/presentation/helpers/http/http-helper'
 import { InvalidRoleOrUserError } from '@/presentation/errors'
 
@@ -20,7 +20,7 @@ const makeFakeHttpRequest = (): HttpRequest => ({
 
 const makeAddRoleToUser = (): AddRoleToUser => {
   class AddRoleToUserStub implements AddRoleToUser {
-    async addRoleToUser (data: AddRoleToUserModel): Promise<AccountModel> {
+    async addRoleToUser (data: AddRoleToUserParams): Promise<AccountModel> {
       return new Promise(resolve => resolve(makeFakeAccount()))
     }
   }

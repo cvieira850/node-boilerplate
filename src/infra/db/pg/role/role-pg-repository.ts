@@ -2,7 +2,7 @@
 import { AddRoleRepository } from '@/data/protocols/db/role/add-role-repository'
 import { LoadRoleByNameRepository } from '@/data/usecases/role/add-role/db-add-role-protocols'
 import { LoadRoleByIdRepository } from '@/data/usecases/role/add-role-to-user/db-add-role-to-user-protocols'
-import { AddRoleModel } from '@/domain/usecases/role/add-role'
+import { AddRoleParams } from '@/domain/usecases/role/add-role'
 import { RoleModel } from '@/domain/models/role'
 import Role from '@/infra/db/pg/typeorm/entities/role'
 import { getRepository } from 'typeorm'
@@ -11,7 +11,7 @@ export class RolePgRepository implements
 AddRoleRepository,
 LoadRoleByNameRepository,
 LoadRoleByIdRepository {
-  async add (roleData: AddRoleModel): Promise<RoleModel> {
+  async add (roleData: AddRoleParams): Promise<RoleModel> {
     const roleRepository = getRepository(Role)
     const roleCreated = roleRepository.create(roleData)
     const role = await roleRepository.save(roleCreated)

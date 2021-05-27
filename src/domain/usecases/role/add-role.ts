@@ -1,7 +1,7 @@
 import { RoleModel } from '@/domain/models/role'
 
-export type AddRoleModel = Omit<RoleModel, 'id'>
+export type AddRoleParams = Omit<RoleModel, 'id'>
 
 export interface AddRole {
-  add: (data: AddRoleModel) => Promise<RoleModel>
+  add: (data: AddRoleParams) => Promise<RoleModel>
 }
