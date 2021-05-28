@@ -56,7 +56,7 @@ describe('DbAddRoleToUser UseCase', () => {
 
   test('Should return null if LoadAccountByIdRepository returns null', async () => {
     const { sut, loadAccountByIdRepositoryStub } = makeSut()
-    jest.spyOn(loadAccountByIdRepositoryStub,'loadById').mockReturnValueOnce(new Promise((resolve) => resolve(null)))
+    jest.spyOn(loadAccountByIdRepositoryStub,'loadById').mockReturnValueOnce(Promise.resolve(null))
     const account = await sut.addRoleToUser(mockAddRoleToUserParams())
     expect(account).toBeNull()
   })
@@ -78,7 +78,7 @@ describe('DbAddRoleToUser UseCase', () => {
 
   test('Should return null if LoadRoleByIdRepository returns null', async () => {
     const { sut, loadRoleByIdRepositoryStub } = makeSut()
-    jest.spyOn(loadRoleByIdRepositoryStub,'loadById').mockReturnValueOnce(new Promise((resolve) => resolve(null)))
+    jest.spyOn(loadRoleByIdRepositoryStub,'loadById').mockReturnValueOnce(Promise.resolve(null))
     const account = await sut.addRoleToUser(mockAddRoleToUserParams())
     expect(account).toBeNull()
   })

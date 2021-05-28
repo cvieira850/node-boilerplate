@@ -6,7 +6,7 @@ export const mockAddAccount = (): AddAccount => {
   class AddAccountStub implements AddAccount {
     async add (account: AddAccountParams): Promise<AccountModel> {
       const fakeAccount = mockAccountModel()
-      return new Promise(resolve => resolve(fakeAccount))
+      return Promise.resolve(fakeAccount)
     }
   }
   return new AddAccountStub()

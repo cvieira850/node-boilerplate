@@ -55,14 +55,14 @@ describe('AddRoleController', () => {
 
   test('Should return 403 if AddRole returns null', async () => {
     const { sut, addRoleStub } = makeSut()
-    jest.spyOn(addRoleStub,'add').mockReturnValueOnce(new Promise(resolve => resolve(null)))
+    jest.spyOn(addRoleStub,'add').mockReturnValueOnce(Promise.resolve(null))
     const httpResponse = await sut.handle(mockRequest())
     expect(httpResponse).toEqual(forbidden(new RoleIsAlreadyRegisteredError()))
   })
 
   test('Should return 500 if AddRole throws', async () => {
     const { sut, addRoleStub } = makeSut()
-    jest.spyOn(addRoleStub,'add').mockResolvedValueOnce(new Promise((resolve,reject) => reject(new Error())))
+    jest.spyOn(addRoleStub,'add').mockResolvedValueOnce(Promise.reject(new Error()))
     const httpResponse = await sut.handle(mockRequest())
     expect(httpResponse).toEqual(serverError(new Error()))
   })

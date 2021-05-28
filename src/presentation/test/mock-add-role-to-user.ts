@@ -5,7 +5,7 @@ import { mockAccountModel } from '@/domain/test'
 export const mockAddRoleToUser = (): AddRoleToUser => {
   class AddRoleToUserStub implements AddRoleToUser {
     async addRoleToUser (data: AddRoleToUserParams): Promise<AccountModel> {
-      return new Promise(resolve => resolve(mockAccountModel()))
+      return Promise.resolve(mockAccountModel())
     }
   }
   return new AddRoleToUserStub()

@@ -6,7 +6,7 @@ import { Encrypt } from '@/data/protocols/cryptography/encrypt'
 export const mockDecrypter = (): Decrypter => {
   class DecrypterStub implements Decrypter {
     async decrypt (value: string): Promise<string> {
-      return new Promise(resolve => resolve('any_value'))
+      return Promise.resolve('any_value')
     }
   }
   return new DecrypterStub()
@@ -15,7 +15,7 @@ export const mockDecrypter = (): Decrypter => {
 export const mockHashCompare = (): HashComparer => {
   class HashComparerStub implements HashComparer {
     async compare (value: string, hash: string): Promise<boolean> {
-      return new Promise(resolve => resolve(true))
+      return Promise.resolve(true)
     }
   }
   return new HashComparerStub()
@@ -24,7 +24,7 @@ export const mockHashCompare = (): HashComparer => {
 export const mockHash = (): Hash => {
   class HashStub implements Hash {
     async hash (value: string): Promise<string> {
-      return new Promise(resolve => resolve('hashed_password'))
+      return Promise.resolve('hashed_password')
     }
   }
   return new HashStub()
@@ -33,7 +33,7 @@ export const mockHash = (): Hash => {
 export const mockEncrypt = (): Encrypt => {
   class EncryptStub implements Encrypt {
     async encrypt (id: string): Promise<string> {
-      return new Promise(resolve => resolve('any_token'))
+      return Promise.resolve('any_token')
     }
   }
   return new EncryptStub()
