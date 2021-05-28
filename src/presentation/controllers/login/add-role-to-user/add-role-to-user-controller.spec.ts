@@ -56,7 +56,7 @@ describe('AddRoleToUserController', () => {
 
   test('Should return 403 if AddRoleToUser returns null', async () => {
     const { sut, addRoleToUserStub } = makeSut()
-    jest.spyOn(addRoleToUserStub,'addRoleToUser').mockReturnValueOnce(new Promise(resolve => resolve(null)))
+    jest.spyOn(addRoleToUserStub,'addRoleToUser').mockReturnValueOnce(Promise.resolve(null))
     const httpResponse = await sut.handle(mockRequest())
     expect(httpResponse).toEqual(forbidden(new InvalidRoleOrUserError()))
   })

@@ -8,7 +8,7 @@ import { LoadRoleByNameRepository } from '../protocols/db/role/load-role-by-name
 export const mockAddRoleRepository = (): AddRoleRepository => {
   class AddRoleRepositoryStub implements AddRoleRepository {
     async add (roleData: AddRoleParams): Promise<RoleModel> {
-      return new Promise(resolve => resolve(mockRoleModel()))
+      return Promise.resolve(mockRoleModel())
     }
   }
   return new AddRoleRepositoryStub()
@@ -17,7 +17,7 @@ export const mockAddRoleRepository = (): AddRoleRepository => {
 export const mockLoadRoleByIdRepository = (): LoadRoleByIdRepository => {
   class LoadRoleByIdRepositoryStub implements LoadRoleByIdRepository {
     async loadById (roleId: string): Promise<RoleModel> {
-      return new Promise(resolve => resolve(mockRoleModel()))
+      return Promise.resolve(mockRoleModel())
     }
   }
   return new LoadRoleByIdRepositoryStub()
@@ -26,7 +26,7 @@ export const mockLoadRoleByIdRepository = (): LoadRoleByIdRepository => {
 export const mockLoadRoleByNameRepository = (): LoadRoleByNameRepository => {
   class LoadRoleByNameRepositoryStub implements LoadRoleByNameRepository {
     async loadByName (name: string): Promise<RoleModel> {
-      return new Promise(resolve => resolve(null))
+      return Promise.resolve(null)
     }
   }
   return new LoadRoleByNameRepositoryStub()

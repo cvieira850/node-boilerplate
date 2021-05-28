@@ -43,7 +43,7 @@ describe('DbAddRole UseCase', () => {
 
   test('Should return null if LoadRoleByNameRepository not returns null', async () => {
     const { sut, loadRoleByNameRepositoryStub } = makeSut()
-    jest.spyOn(loadRoleByNameRepositoryStub,'loadByName').mockReturnValueOnce(new Promise(resolve => resolve(mockRoleModel())))
+    jest.spyOn(loadRoleByNameRepositoryStub,'loadByName').mockReturnValueOnce(Promise.resolve(mockRoleModel()))
     const role = await sut.add(mockAddRoleParams())
     expect(role).toBeNull()
   })

@@ -35,7 +35,7 @@ describe('LoadAccountById Controller', () => {
 
   test('Should return 403 if LoadAccountById returns null', async () => {
     const { sut,loadAccountByIdStub } = makeSut()
-    jest.spyOn(loadAccountByIdStub,'loadById').mockReturnValueOnce(new Promise(resolve => resolve(null)))
+    jest.spyOn(loadAccountByIdStub,'loadById').mockReturnValueOnce(Promise.resolve(null))
     const httpResponse = await sut.handle(mockRequest())
     expect(httpResponse).toEqual(forbidden(new InvalidParamError('userId')))
   })
