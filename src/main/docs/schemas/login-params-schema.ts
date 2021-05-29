@@ -2,7 +2,8 @@ export const loginParamsSchema = {
   type: 'object',
   properties: {
     email: {
-      type: 'string'
+      type: 'string',
+      format: 'email'
     },
     password: {
       type: 'string'
