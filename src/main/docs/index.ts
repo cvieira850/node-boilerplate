@@ -1,6 +1,6 @@
-import { loadAccountByIdPath, loginPath, signUpPath, addRolePath, addRoleToUserPath } from './paths'
-import { badRequest,serverError, unauthorized, notFound, forbidden } from './components'
-import { accountSchema, errorSchema, loginParamsSchema, loginSchema, roleSchema, apiKeyAuthSchema, signUpParamsSchema, addRoleParamsSchema, addRoleToUserParamsSchema } from './schemas'
+import paths from './paths'
+import components from './components'
+import schemas from './schemas'
 
 export default {
   openapi: '3.0.0',
@@ -21,33 +21,9 @@ export default {
   },{
     name: 'Account'
   }],
-  paths: {
-    '/login': loginPath,
-    '/signup': signUpPath,
-    '/users/{userId}': loadAccountByIdPath,
-    '/users/role': addRoleToUserPath,
-    '/roles': addRolePath
-  },
-  schemas: {
-    account: accountSchema,
-    login: loginSchema,
-    loginParams: loginParamsSchema,
-    error: errorSchema,
-    role: roleSchema,
-    signupParams: signUpParamsSchema,
-    addRoleParams: addRoleParamsSchema,
-    addRoleToUserParams: addRoleToUserParamsSchema
-  },
-  components: {
-    securitySchemes: {
-      apiKeyAuth: apiKeyAuthSchema
-    },
-    badRequest,
-    serverError,
-    unauthorized,
-    notFound,
-    forbidden
-  },
+  paths,
+  schemas,
+  components,
   contact: {
     name: 'Caio Vieira',
     email: 'contato@caiovieira.com.br'
