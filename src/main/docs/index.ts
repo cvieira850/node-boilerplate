@@ -1,6 +1,6 @@
-import { loginPath } from './paths/login-path'
-import { accountSchema } from './schemas/account-schema'
-import { loginParamsSchema } from './schemas/login-params-schema'
+import { loginPath } from './paths'
+import { badRequest,serverError, unauthorized, notFound } from './components'
+import { accountSchema, errorSchema, loginParamsSchema } from './schemas'
 
 export default {
   openapi: '3.0.0',
@@ -8,6 +8,10 @@ export default {
     title: 'Node Boilerplate',
     description: 'Boilerplate de api feita em NodeJS',
     version: '1.0.0'
+  },
+  license: {
+    name: 'MIT',
+    url: 'https://opensource.org/licenses/MIT'
   },
   servers: [{
     url: '/api'
@@ -20,6 +24,17 @@ export default {
   },
   schemas: {
     account: accountSchema,
-    loginParams: loginParamsSchema
+    loginParams: loginParamsSchema,
+    error: errorSchema
+  },
+  components: {
+    badRequest,
+    serverError,
+    unauthorized,
+    notFound
+  },
+  contact: {
+    name: 'Caio Vieira',
+    email: 'contato@caiovieira.com.br'
   }
 }
