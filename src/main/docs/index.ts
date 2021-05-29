@@ -1,6 +1,6 @@
-import { loadAccountByIdPath, loginPath } from './paths'
+import { loadAccountByIdPath, loginPath, signUpPath } from './paths'
 import { badRequest,serverError, unauthorized, notFound, forbidden } from './components'
-import { accountSchema, errorSchema, loginParamsSchema, loginSchema, roleSchema, apiKeyAuthSchema } from './schemas'
+import { accountSchema, errorSchema, loginParamsSchema, loginSchema, roleSchema, apiKeyAuthSchema, signUpParamsSchema } from './schemas'
 
 export default {
   openapi: '3.0.0',
@@ -23,14 +23,16 @@ export default {
   }],
   paths: {
     '/login': loginPath,
-    '/users/{userId}': loadAccountByIdPath
+    '/users/{userId}': loadAccountByIdPath,
+    '/signup': signUpPath
   },
   schemas: {
     account: accountSchema,
     login: loginSchema,
     loginParams: loginParamsSchema,
     error: errorSchema,
-    role: roleSchema
+    role: roleSchema,
+    signupParams: signUpParamsSchema
   },
   components: {
     securitySchemes: {
