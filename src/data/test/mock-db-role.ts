@@ -25,11 +25,11 @@ export class LoadRoleByIdRepositorySpy implements LoadRoleByIdRepository {
   }
 }
 
-export const mockLoadRoleByNameRepository = (): LoadRoleByNameRepository => {
-  class LoadRoleByNameRepositoryStub implements LoadRoleByNameRepository {
-    async loadByName (name: string): Promise<RoleModel> {
-      return Promise.resolve(null)
-    }
+export class LoadRoleByNameRepositorySpy implements LoadRoleByNameRepository {
+  result = null
+  name: string
+  async loadByName (name: string): Promise<RoleModel> {
+    this.name = name
+    return Promise.resolve(this.result)
   }
-  return new LoadRoleByNameRepositoryStub()
 }

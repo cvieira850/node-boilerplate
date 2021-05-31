@@ -1,22 +1,21 @@
-import { LoadRoleByNameRepository } from './db-add-role-protocols'
 import { DbAddRole } from './db-add-role'
 import { mockAddRoleParams, throwError, mockRoleModel } from '@/domain/test'
-import { AddRoleRepositorySpy, mockLoadRoleByNameRepository } from '@/data/test'
+import { AddRoleRepositorySpy, LoadRoleByNameRepositorySpy } from '@/data/test'
 
 type SutTypes = {
   sut: DbAddRole
   addRoleRepositorySpy: AddRoleRepositorySpy
-  loadRoleByNameRepositoryStub: LoadRoleByNameRepository
+  loadRoleByNameRepositorySpy: LoadRoleByNameRepositorySpy
 }
 
 const makeSut = (): SutTypes => {
   const addRoleRepositorySpy = new AddRoleRepositorySpy()
-  const loadRoleByNameRepositoryStub = mockLoadRoleByNameRepository()
-  const sut = new DbAddRole(addRoleRepositorySpy, loadRoleByNameRepositoryStub)
+  const loadRoleByNameRepositorySpy = new LoadRoleByNameRepositorySpy()
+  const sut = new DbAddRole(addRoleRepositorySpy, loadRoleByNameRepositorySpy)
   return {
     sut,
     addRoleRepositorySpy,
-    loadRoleByNameRepositoryStub
+    loadRoleByNameRepositorySpy
   }
 }
 
@@ -45,17 +44,16 @@ describe('DbAddRole UseCase', () => {
 
   describe('LoadRoleByNameRepository', () => {
     test('Should return null if LoadRoleByNameRepository not returns null', async () => {
-      const { sut, loadRoleByNameRepositoryStub } = makeSut()
-      jest.spyOn(loadRoleByNameRepositoryStub,'loadByName').mockReturnValueOnce(Promise.resolve(mockRoleModel()))
+      const { sut, loadRoleByNameRepositorySpy } = makeSut()
+      loadRoleByNameRepositorySpy.result = mockRoleModel()
       const role = await sut.add(mockAddRoleParams())
       expect(role).toBeNull()
     })
 
     test('Should call LoadRoleByNameRepository with correct name', async () => {
-      const { sut,loadRoleByNameRepositoryStub } = makeSut()
-      const loadSpy = jest.spyOn(loadRoleByNameRepositoryStub,'loadByName')
+      const { sut,loadRoleByNameRepositorySpy } = makeSut()
       await sut.add(mockAddRoleParams())
-      expect(loadSpy).toHaveBeenCalledWith('any_name')
+      expect(loadRoleByNameRepositorySpy.name).toBe('any_name')
     })
   })
 })
