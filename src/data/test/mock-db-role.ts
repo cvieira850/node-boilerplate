@@ -5,13 +5,14 @@ import { AddRoleRepository } from '@/data/protocols/db/role/add-role-repository'
 import { LoadRoleByIdRepository } from '@/data/protocols/db/role/load-role-by-id-repository'
 import { LoadRoleByNameRepository } from '../protocols/db/role/load-role-by-name-repository'
 
-export const mockAddRoleRepository = (): AddRoleRepository => {
-  class AddRoleRepositoryStub implements AddRoleRepository {
-    async add (roleData: AddRoleParams): Promise<RoleModel> {
-      return Promise.resolve(mockRoleModel())
-    }
+export class AddRoleRepositorySpy implements AddRoleRepository {
+  roleModel = mockRoleModel()
+  roleData: AddRoleParams
+
+  async add (roleData: AddRoleParams): Promise<RoleModel> {
+    this.roleData = roleData
+    return Promise.resolve(this.roleModel)
   }
-  return new AddRoleRepositoryStub()
 }
 
 export const mockLoadRoleByIdRepository = (): LoadRoleByIdRepository => {
