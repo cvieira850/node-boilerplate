@@ -14,13 +14,16 @@ export class DecrypterSpy implements Decrypter {
   }
 }
 
-export const mockHashCompare = (): HashComparer => {
-  class HashComparerStub implements HashComparer {
-    async compare (value: string, hash: string): Promise<boolean> {
-      return Promise.resolve(true)
-    }
+export class HashComparerSpy implements HashComparer {
+  plaintext: string
+  digest: string
+  isValid = true
+
+  async compare (plaintext: string, digest: string): Promise<boolean> {
+    this.plaintext = plaintext
+    this.digest = digest
+    return Promise.resolve(this.isValid)
   }
-  return new HashComparerStub()
 }
 
 export class HashSpy implements Hash {
