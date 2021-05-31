@@ -9,13 +9,14 @@ import { AddRoleToUserParams } from '@/domain/usecases/account/add-role-to-user'
 import { LoadAccountByTokenRepository } from '../protocols/db/account/load-account-by-token-repository'
 import { UpdateAccessTokenRepository } from '../protocols/db/account/update-access-token-repository'
 
-export const mockAddAccountRepository = (): AddAccountRepository => {
-  class AddAccountRepositoryStub implements AddAccountRepository {
-    async add (accountData: AddAccountParams): Promise<AccountModel> {
-      return Promise.resolve(mockAccountModel())
-    }
+export class AddAccountRepositorySpy implements AddAccountRepository {
+  accountModel = mockAccountModel()
+  addAccountParams: AddAccountParams
+
+  async add (accountData: AddAccountParams): Promise<AccountModel> {
+    this.addAccountParams = accountData
+    return Promise.resolve(this.accountModel)
   }
-  return new AddAccountRepositoryStub()
 }
 
 export const mockAddRoleToUserRepository = (): AddRoleToUserRepository => {
