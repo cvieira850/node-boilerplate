@@ -15,13 +15,14 @@ export class AddRoleRepositorySpy implements AddRoleRepository {
   }
 }
 
-export const mockLoadRoleByIdRepository = (): LoadRoleByIdRepository => {
-  class LoadRoleByIdRepositoryStub implements LoadRoleByIdRepository {
-    async loadById (roleId: string): Promise<RoleModel> {
-      return Promise.resolve(mockRoleModel())
-    }
+export class LoadRoleByIdRepositorySpy implements LoadRoleByIdRepository {
+  roleModel= mockRoleModel()
+  roleId: string
+
+  async loadById (roleId: string): Promise<RoleModel> {
+    this.roleId = roleId
+    return Promise.resolve(this.roleModel)
   }
-  return new LoadRoleByIdRepositoryStub()
 }
 
 export const mockLoadRoleByNameRepository = (): LoadRoleByNameRepository => {
