@@ -28,13 +28,14 @@ export const mockAddRoleToUserRepository = (): AddRoleToUserRepository => {
   return new AddRoleToUserRepositoryStub()
 }
 
-export const mockLoadAccountByEmailRepository = (): LoadAccountByEmailRepository => {
-  class LoadAccountByEmailRepositoryStub implements LoadAccountByEmailRepository {
-    async loadByEmail (email: string): Promise<AccountModel> {
-      return Promise.resolve(mockAccountModel())
-    }
+export class LoadAccountByEmailRepositorySpy implements LoadAccountByEmailRepository {
+  accountModel = mockAccountModel()
+  email: string
+
+  async loadByEmail (email: string): Promise<AccountModel> {
+    this.email = email
+    return Promise.resolve(this.accountModel)
   }
-  return new LoadAccountByEmailRepositoryStub()
 }
 
 export const mockLoadAccountByIdRepository = (): LoadAccountByIdRepository => {
