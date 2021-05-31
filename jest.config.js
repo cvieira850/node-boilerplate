@@ -8,7 +8,6 @@ module.exports = {
     '!**/protocols/**',
     '!**/test/**',
     '!<rootDir>/src/main/**',
-    // '!<rootDir>/src/domain/**',
     '!<rootDir>/src/infra/db/pg/typeorm/**'
   ],
   coverageDirectory: 'coverage',

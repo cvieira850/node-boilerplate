@@ -38,13 +38,14 @@ export class LoadAccountByEmailRepositorySpy implements LoadAccountByEmailReposi
   }
 }
 
-export const mockLoadAccountByIdRepository = (): LoadAccountByIdRepository => {
-  class LoadAccountByIdRepositoryStub implements LoadAccountByIdRepository {
-    async loadById (userId: string): Promise<AccountModel> {
-      return Promise.resolve(mockAccountModel())
-    }
+export class LoadAccountByIdRepositorySpy implements LoadAccountByIdRepository {
+  accountModel = mockAccountModel()
+  userId: string
+
+  async loadById (userId: string): Promise<AccountModel> {
+    this.userId = userId
+    return Promise.resolve(this.accountModel)
   }
-  return new LoadAccountByIdRepositoryStub()
 }
 
 export class LoadAccountByTokenRepositorySpy implements LoadAccountByTokenRepository {
