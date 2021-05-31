@@ -47,13 +47,16 @@ export const mockLoadAccountByIdRepository = (): LoadAccountByIdRepository => {
   return new LoadAccountByIdRepositoryStub()
 }
 
-export const mockLoadAccountByTokenRepository = (): LoadAccountByTokenRepository => {
-  class LoadAccountByTokenRepositoryStub implements LoadAccountByTokenRepository {
-    async loadByToken (value: string): Promise<AccountModel> {
-      return Promise.resolve(mockAccountModel())
-    }
+export class LoadAccountByTokenRepositorySpy implements LoadAccountByTokenRepository {
+  accountModel = mockAccountModel()
+  token: string
+  role: string
+
+  async loadByToken (token: string, role?: string): Promise<AccountModel> {
+    this.token = token
+    this.role = role
+    return Promise.resolve(this.accountModel)
   }
-  return new LoadAccountByTokenRepositoryStub()
 }
 
 export const mockUpdateAccessTokenRepository = (): UpdateAccessTokenRepository => {
