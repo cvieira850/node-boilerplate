@@ -36,11 +36,12 @@ export class HashSpy implements Hash {
   }
 }
 
-export const mockEncrypt = (): Encrypt => {
-  class EncryptStub implements Encrypt {
-    async encrypt (id: string): Promise<string> {
-      return Promise.resolve('any_token')
-    }
+export class EncryptSpy implements Encrypt {
+  ciphertext = faker.datatype.uuid()
+  plaintext: string
+
+  async encrypt (plaintext: string): Promise<string> {
+    this.plaintext = plaintext
+    return Promise.resolve(this.ciphertext)
   }
-  return new EncryptStub()
 }
