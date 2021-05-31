@@ -18,13 +18,14 @@ export class AddAccountRepositorySpy implements AddAccountRepository {
   }
 }
 
-export const mockAddRoleToUserRepository = (): AddRoleToUserRepository => {
-  class AddRoleToUserRepositoryStub implements AddRoleToUserRepository {
-    async addRoleToUser (data: AddRoleToUserParams): Promise<AccountModel> {
-      return Promise.resolve(mockAccountModel())
-    }
+export class AddRoleToUserRepositorySpy implements AddRoleToUserRepository {
+  data: AddRoleToUserParams
+  accountModel = mockAccountModel()
+
+  async addRoleToUser (data: AddRoleToUserParams): Promise<AccountModel> {
+    this.data = data
+    return Promise.resolve(this.accountModel)
   }
-  return new AddRoleToUserRepositoryStub()
 }
 
 export class LoadAccountByEmailRepositorySpy implements LoadAccountByEmailRepository {

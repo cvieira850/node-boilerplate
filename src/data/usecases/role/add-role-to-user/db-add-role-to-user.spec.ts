@@ -1,30 +1,29 @@
 import { DbAddRoleToUser } from './db-add-role-to-user'
 import {
-  AddRoleToUserRepository,
   LoadRoleByIdRepository
 } from './db-add-role-to-user-protocols'
 import { throwError, mockAccountModel, mockAddRoleToUserParams } from '@/domain/test'
-import { mockAddRoleToUserRepository, LoadAccountByIdRepositorySpy, mockLoadRoleByIdRepository } from '@/data/test'
+import { AddRoleToUserRepositorySpy, LoadAccountByIdRepositorySpy, mockLoadRoleByIdRepository } from '@/data/test'
 
 type SutTypes = {
   sut: DbAddRoleToUser
-  addRoleToUserRepositoryStub: AddRoleToUserRepository
+  addRoleToUserRepositorySpy: AddRoleToUserRepositorySpy
   loadAccountByIdRepositorySpy: LoadAccountByIdRepositorySpy
   loadRoleByIdRepositoryStub: LoadRoleByIdRepository
 }
 
 const makeSut = (): SutTypes => {
-  const addRoleToUserRepositoryStub = mockAddRoleToUserRepository()
+  const addRoleToUserRepositorySpy = new AddRoleToUserRepositorySpy()
   const loadAccountByIdRepositorySpy = new LoadAccountByIdRepositorySpy()
   const loadRoleByIdRepositoryStub = mockLoadRoleByIdRepository()
   const sut = new DbAddRoleToUser(
-    addRoleToUserRepositoryStub,
+    addRoleToUserRepositorySpy,
     loadAccountByIdRepositorySpy,
     loadRoleByIdRepositoryStub
   )
   return {
     sut,
-    addRoleToUserRepositoryStub,
+    addRoleToUserRepositorySpy,
     loadAccountByIdRepositorySpy,
     loadRoleByIdRepositoryStub
   }
@@ -33,15 +32,15 @@ const makeSut = (): SutTypes => {
 describe('DbAddRoleToUser UseCase', () => {
   describe('AddRoleToUserRepository', () => {
     test('Should call AddRoleToUserRepository with correct values', async () => {
-      const { sut, addRoleToUserRepositoryStub } = makeSut()
-      const addSpy = jest.spyOn(addRoleToUserRepositoryStub,'addRoleToUser')
-      await sut.addRoleToUser(mockAddRoleToUserParams())
-      expect(addSpy).toHaveBeenCalledWith(mockAddRoleToUserParams())
+      const { sut, addRoleToUserRepositorySpy } = makeSut()
+      const addRoleToUserParams = mockAddRoleToUserParams()
+      await sut.addRoleToUser(addRoleToUserParams)
+      expect(addRoleToUserRepositorySpy.data).toBe(addRoleToUserParams)
     })
 
     test('Should throw if AddRoleToUserRepository throws', async () => {
-      const { sut, addRoleToUserRepositoryStub } = makeSut()
-      jest.spyOn(addRoleToUserRepositoryStub,'addRoleToUser').mockImplementationOnce(throwError)
+      const { sut, addRoleToUserRepositorySpy } = makeSut()
+      jest.spyOn(addRoleToUserRepositorySpy,'addRoleToUser').mockImplementationOnce(throwError)
       const promise = sut.addRoleToUser(mockAddRoleToUserParams())
       await expect(promise).rejects.toThrow()
     })

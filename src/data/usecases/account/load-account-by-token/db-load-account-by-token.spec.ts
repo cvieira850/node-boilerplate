@@ -1,5 +1,5 @@
 import { DbLoadAccountByToken } from './db-load-account-by-token'
-import { throwError, mockAccountModel } from '@/domain/test'
+import { throwError } from '@/domain/test'
 import { DecrypterSpy, LoadAccountByTokenRepositorySpy } from '@/data/test'
 
 type SutTypes = {
@@ -76,14 +76,14 @@ describe('DbLoadAccountByToken Usecase', () => {
   })
 
   test('Should return an account on success' , async () => {
-    const { sut } = makeSut()
+    const { sut, loadAccountByTokenRepositorySpy } = makeSut()
     const account = await sut.loadByToken('any_token')
-    expect(account).toEqual(mockAccountModel())
+    expect(account).toEqual(loadAccountByTokenRepositorySpy.accountModel)
   })
 
   test('Should return an account on success' , async () => {
-    const { sut } = makeSut()
+    const { sut, loadAccountByTokenRepositorySpy } = makeSut()
     const account = await sut.loadByToken('any_token','any_role')
-    expect(account).toEqual(mockAccountModel())
+    expect(account).toEqual(loadAccountByTokenRepositorySpy.accountModel)
   })
 })
