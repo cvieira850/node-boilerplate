@@ -4,13 +4,14 @@ import { HashComparer } from '@/data/protocols/cryptography/hash-comparer'
 import { Encrypt } from '@/data/protocols/cryptography/encrypt'
 import faker from 'faker'
 
-export const mockDecrypter = (): Decrypter => {
-  class DecrypterStub implements Decrypter {
-    async decrypt (value: string): Promise<string> {
-      return Promise.resolve('any_value')
-    }
+export class DecrypterSpy implements Decrypter {
+  plaintext = faker.internet.password()
+  ciphertext: string
+
+  async decrypt (ciphertext: string): Promise<string> {
+    this.ciphertext = ciphertext
+    return Promise.resolve(this.plaintext)
   }
-  return new DecrypterStub()
 }
 
 export const mockHashCompare = (): HashComparer => {
