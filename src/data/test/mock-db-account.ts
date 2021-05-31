@@ -7,7 +7,6 @@ import { AccountModel } from '@/domain/models/account'
 import { AddAccountParams } from '@/domain/usecases/account/add-account'
 import { AddRoleToUserParams } from '@/domain/usecases/account/add-role-to-user'
 import { LoadAccountByTokenRepository } from '../protocols/db/account/load-account-by-token-repository'
-import { UpdateAccessTokenRepository } from '../protocols/db/account/update-access-token-repository'
 
 export class AddAccountRepositorySpy implements AddAccountRepository {
   accountModel = mockAccountModel()
@@ -60,11 +59,14 @@ export class LoadAccountByTokenRepositorySpy implements LoadAccountByTokenReposi
   }
 }
 
-export const mockUpdateAccessTokenRepository = (): UpdateAccessTokenRepository => {
-  class UpdateAccessTokenRepositoryStub implements UpdateAccessTokenRepository {
-    async updateAccessToken (id: string, token: string): Promise<void> {
-      return Promise.resolve()
-    }
+export class UpdateAccessTokenRepositorySpy implements UpdateAccessTokenRepositorySpy {
+  result = null
+  id: string
+  token: string
+
+  async updateAccessToken (id: string, token: string): Promise<void> {
+    this.id = id
+    this.token = token
+    return Promise.resolve(this.result)
   }
-  return new UpdateAccessTokenRepositoryStub()
 }
