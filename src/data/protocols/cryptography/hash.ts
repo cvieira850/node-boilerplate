@@ -1,3 +1,3 @@
 export interface Hash {
-  hash: (value: string) => Promise<string>
+  hash: (plaintext: string) => Promise<string>
 }

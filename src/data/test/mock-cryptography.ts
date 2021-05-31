@@ -2,6 +2,7 @@ import { Hash } from '@/data/protocols/cryptography/hash'
 import { Decrypter } from '@/data/protocols/cryptography/decrypter'
 import { HashComparer } from '@/data/protocols/cryptography/hash-comparer'
 import { Encrypt } from '@/data/protocols/cryptography/encrypt'
+import faker from 'faker'
 
 export const mockDecrypter = (): Decrypter => {
   class DecrypterStub implements Decrypter {
@@ -21,13 +22,14 @@ export const mockHashCompare = (): HashComparer => {
   return new HashComparerStub()
 }
 
-export const mockHash = (): Hash => {
-  class HashStub implements Hash {
-    async hash (value: string): Promise<string> {
-      return Promise.resolve('hashed_password')
-    }
+export class HashSpy implements Hash {
+  digest = faker.datatype.uuid()
+  plaintext: string
+
+  async hash (plaintext: string): Promise<string> {
+    this.plaintext = plaintext
+    return Promise.resolve(this.digest)
   }
-  return new HashStub()
 }
 
 export const mockEncrypt = (): Encrypt => {
