@@ -4,6 +4,7 @@ import Role from '@/infra/db/pg/typeorm/entities/role'
 import User from '@/infra/db/pg/typeorm/entities/user'
 import { getConnection, getRepository, createConnection } from 'typeorm'
 import { mockAddAccountParams, mockAddAccountWithTokenParams, mockAddRoleParams } from '@/domain/test'
+import faker from 'faker'
 
 const makeSut = (): AccountPgRepository => {
   return new AccountPgRepository()
@@ -20,35 +21,37 @@ describe('Account Pg Repository', () => {
   describe('add() ',() => {
     test('Should return an account on add success', async () => {
       const sut = makeSut()
-      const account = await sut.add(mockAddAccountParams())
+      const addAccountParams = mockAddAccountParams()
+      const account = await sut.add(addAccountParams)
       expect(account).toBeTruthy()
       expect(account.id).toBeTruthy()
-      expect(account.name).toBe('any_name')
-      expect(account.email).toBe('any_email@mail.com')
-      expect(account.password).toBe('any_password')
+      expect(account.name).toBe(addAccountParams.name)
+      expect(account.email).toBe(addAccountParams.email)
+      expect(account.password).toBe(addAccountParams.password)
     })
   })
 
   describe('loadByEmail() ',() => {
     test('Should return an account on loadByEmail success', async () => {
       const sut = makeSut()
+      const addAccountParams = mockAddAccountParams()
       await getConnection()
         .createQueryBuilder()
         .insert()
         .into(User)
-        .values(mockAddAccountParams())
+        .values(addAccountParams)
         .execute()
-      const account = await sut.loadByEmail('any_email@mail.com')
+      const account = await sut.loadByEmail(addAccountParams.email)
       expect(account).toBeTruthy()
       expect(account.id).toBeTruthy()
-      expect(account.name).toBe('any_name')
-      expect(account.email).toBe('any_email@mail.com')
-      expect(account.password).toBe('any_password')
+      expect(account.name).toBe(addAccountParams.name)
+      expect(account.email).toBe(addAccountParams.email)
+      expect(account.password).toBe(addAccountParams.password)
     })
 
     test('Should return null if loadByEmail fails', async () => {
       const sut = makeSut()
-      const account = await sut.loadByEmail('any_email@mail.com')
+      const account = await sut.loadByEmail(faker.internet.email())
       expect(account).toBeFalsy()
     })
   })
@@ -56,35 +59,38 @@ describe('Account Pg Repository', () => {
   describe('loadById() ',() => {
     test('Should return null if loadById fails', async () => {
       const sut = makeSut()
-      const account = await sut.loadById('d1ffd121-53b5-4364-9f2d-651369faba83')
+      const account = await sut.loadById(faker.datatype.uuid())
       expect(account).toBeFalsy()
     })
 
     test('Should return an account on loadById success', async () => {
       const sut = makeSut()
+      const addAccountParams = mockAddAccountParams()
       const user = await getConnection()
         .createQueryBuilder()
         .insert()
         .into(User)
-        .values(mockAddAccountParams())
+        .values(addAccountParams)
         .execute()
       const account = await sut.loadById(user.generatedMaps[0].id)
       expect(account).toBeTruthy()
       expect(account.id).toBeTruthy()
-      expect(account.name).toBe('any_name')
-      expect(account.email).toBe('any_email@mail.com')
-      expect(account.password).toBe('any_password')
+      expect(account.name).toBe(addAccountParams.name)
+      expect(account.email).toBe(addAccountParams.email)
+      expect(account.password).toBe(addAccountParams.password)
     })
   })
 
   describe('addRoleToUser() ', () => {
     test('Should return an account on addRoleToUser success', async () => {
       const sut = makeSut()
+      const addAccountParams = mockAddAccountParams()
+      const roleName = faker.name.jobTitle()
       const user = await getConnection()
         .createQueryBuilder()
         .insert()
         .into(User)
-        .values(mockAddAccountParams())
+        .values(addAccountParams)
         .execute()
       const role = await getConnection()
         .createQueryBuilder()
@@ -92,7 +98,7 @@ describe('Account Pg Repository', () => {
         .into(Role)
         .values(
           {
-            name: 'valid_name'
+            name: roleName
           }
         )
         .execute()
@@ -102,9 +108,9 @@ describe('Account Pg Repository', () => {
       expect(account).toBeTruthy()
       expect(account.id).toBeTruthy()
       expect(account.id).toBe(fakeAccount.id)
-      expect(account.name).toBe('any_name')
-      expect(account.email).toBe('any_email@mail.com')
-      expect(account.password).toBe('any_password')
+      expect(account.name).toBe(addAccountParams.name)
+      expect(account.email).toBe(addAccountParams.email)
+      expect(account.password).toBe(addAccountParams.password)
       expect(account.role_id).toBe(fakeRole.id)
     })
   })
@@ -112,74 +118,86 @@ describe('Account Pg Repository', () => {
   describe('updateAccessToken() ',() => {
     test('Should return an account on updateAccessToken success', async () => {
       const sut = makeSut()
+      const addAccountParams = mockAddAccountParams()
       const res = await getConnection()
         .createQueryBuilder()
         .insert()
         .into(User)
-        .values(mockAddAccountParams())
+        .values(addAccountParams)
         .execute()
       const fakeAccount = res.generatedMaps[0]
+      const accessToken = faker.datatype.uuid()
       const accountRepository = getRepository(User)
       const accountWithOutToken = await accountRepository.findByIds(fakeAccount.id)
       expect(accountWithOutToken[0].access_token).toBeFalsy()
-      await sut.updateAccessToken(fakeAccount.id,'any_token')
+      await sut.updateAccessToken(fakeAccount.id,accessToken)
       const account = await accountRepository.findOne({ id: fakeAccount.id })
       expect(res).toBeTruthy()
       expect(account.id).toBeTruthy()
-      expect(account.access_token).toBe('any_token')
+      expect(account.access_token).toBe(accessToken)
     })
   })
 
   describe('loadByToken() ',() => {
     test('Should return an account on loadByToken without role success', async () => {
       const sut = makeSut()
+      const addAccountWithTokenParams = mockAddAccountWithTokenParams()
       await getConnection()
         .createQueryBuilder()
         .insert()
         .into(User)
-        .values(mockAddAccountWithTokenParams())
+        .values(addAccountWithTokenParams)
         .execute()
-      const account = await sut.loadByToken('any_token')
+      const account = await sut.loadByToken(addAccountWithTokenParams.access_token)
       expect(account).toBeTruthy()
       expect(account.id).toBeTruthy()
-      expect(account.name).toBe('any_name')
-      expect(account.email).toBe('any_email@mail.com')
-      expect(account.password).toBe('any_password')
-      expect(account.access_token).toBe('any_token')
+      expect(account.name).toBe(addAccountWithTokenParams.name)
+      expect(account.email).toBe(addAccountWithTokenParams.email)
+      expect(account.password).toBe(addAccountWithTokenParams.password)
+      expect(account.access_token).toBe(addAccountWithTokenParams.access_token)
     })
 
     test('Should return an account on loadByToken with role', async () => {
       const sut = makeSut()
+      const addRoleParams = mockAddRoleParams()
+      const name = faker.name.firstName()
+      const accessToken = faker.datatype.uuid()
+      const email = faker.internet.email()
+      const password = faker.internet.password()
       const resRole = await getConnection()
         .createQueryBuilder()
         .insert()
         .into(Role)
-        .values(mockAddRoleParams())
+        .values(addRoleParams)
         .execute()
       await getConnection()
         .createQueryBuilder()
         .insert()
         .into(User)
         .values({
-          name: 'valid_name',
-          email: 'valid_email@email.com',
-          password: 'valid_password',
-          access_token: 'valid_token',
+          name,
+          email,
+          password,
+          access_token: accessToken,
           role_id: resRole.generatedMaps[0].id
         })
         .execute()
 
-      const account = await sut.loadByToken('valid_token','any_name')
+      const account = await sut.loadByToken(accessToken,addRoleParams.name)
       expect(account).toBeTruthy()
       expect(account.id).toBeTruthy()
-      expect(account.name).toBe('valid_name')
-      expect(account.email).toBe('valid_email@email.com')
-      expect(account.password).toBe('valid_password')
-      expect(account.access_token).toBe('valid_token')
+      expect(account.name).toBe(name)
+      expect(account.email).toBe(email)
+      expect(account.password).toBe(password)
+      expect(account.access_token).toBe(accessToken)
     })
 
     test('Should return null on loadByToken with wrong role', async () => {
       const sut = makeSut()
+      const name = faker.name.firstName()
+      const accessToken = faker.datatype.uuid()
+      const email = faker.internet.email()
+      const password = faker.internet.password()
       const resRole = await getConnection()
         .createQueryBuilder()
         .insert()
@@ -191,33 +209,34 @@ describe('Account Pg Repository', () => {
         .insert()
         .into(User)
         .values({
-          name: 'valid_name',
-          email: 'valid_email@email.com',
-          password: 'valid_password',
-          access_token: 'valid_token',
+          name,
+          email,
+          password,
+          access_token: accessToken,
           role_id: resRole.generatedMaps[0].id
         })
         .execute()
 
-      const account = await sut.loadByToken('valid_token','valid_role_name2')
+      const account = await sut.loadByToken(accessToken,faker.name.jobTitle())
       expect(account).toBeNull()
     })
 
     test('Should return null on loadByToken with invalid role', async () => {
       const sut = makeSut()
+      const addAccountWithTokenParams = mockAddAccountWithTokenParams()
       await getConnection()
         .createQueryBuilder()
         .insert()
         .into(User)
-        .values(mockAddAccountWithTokenParams())
+        .values(addAccountWithTokenParams)
         .execute()
 
-      const account = await sut.loadByToken('valid_token','valid_role_name')
+      const account = await sut.loadByToken(addAccountWithTokenParams.access_token,faker.name.jobTitle())
       expect(account).toBeNull()
     })
     test('Should return null on call loadByToken with invalid token', async () => {
       const sut = makeSut()
-      const account = await sut.loadByToken('valid_token')
+      const account = await sut.loadByToken(faker.datatype.uuid())
       expect(account).toBeNull()
     })
   })

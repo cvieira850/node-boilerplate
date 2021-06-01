@@ -60,10 +60,11 @@ describe('DbAuthentication UseCase', () => {
 
   describe('HashComparer', () => {
     test('Should call HashComparer with correct values', async () => {
-      const { sut,hashComparerSpy } = makeSut()
+      const { sut,hashComparerSpy, loadAccountByEmailRepositorySpy } = makeSut()
+      const authentication = mockAuthentication()
       await sut.auth(mockAuthentication())
-      expect(hashComparerSpy.plaintext).toBe('any_password')
-      expect(hashComparerSpy.digest).toBe('any_password')
+      expect(hashComparerSpy.plaintext).toBe(authentication.password)
+      expect(hashComparerSpy.digest).toBe(loadAccountByEmailRepositorySpy.accountModel.password)
     })
 
     test('Should throw if HashComparer throws', async () => {

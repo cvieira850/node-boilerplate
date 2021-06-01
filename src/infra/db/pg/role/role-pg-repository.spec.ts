@@ -5,7 +5,7 @@ import { getConnection, createConnection } from 'typeorm'
 
 import { RolePgRepository } from './role-pg-repository'
 
-describe('Account Pg Repository', () => {
+describe('Role Pg Repository', () => {
   beforeEach(async () => {
     await createConnection()
   })

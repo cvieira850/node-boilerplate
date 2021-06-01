@@ -10,3 +10,12 @@ export const mockAddRoleToUser = (): AddRoleToUser => {
   }
   return new AddRoleToUserStub()
 }
+
+export class AddRoleToUserSpy implements AddRoleToUser {
+  accountModel = mockAccountModel()
+  data: AddRoleToUserParams
+  async addRoleToUser (data: AddRoleToUserParams): Promise<AccountModel> {
+    this.data = data
+    return Promise.resolve(this.accountModel)
+  }
+}

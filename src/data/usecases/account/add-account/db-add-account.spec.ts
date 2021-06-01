@@ -27,8 +27,9 @@ describe('DbAddAccount UseCase', () => {
   describe('Hash', () => {
     test('Should call Hash with correct password', async () => {
       const { sut,hashSpy } = makeSut()
-      await sut.add(mockAddAccountParams())
-      expect(hashSpy.plaintext).toBe('any_password')
+      const addAccountParams = mockAddAccountParams()
+      await sut.add(addAccountParams)
+      expect(hashSpy.plaintext).toBe(addAccountParams.password)
     })
     test('Should throw if Hash throws', async () => {
       const { sut, hashSpy } = makeSut()
@@ -42,10 +43,11 @@ describe('DbAddAccount UseCase', () => {
     test('Should call AddAccountRepository with correct values', async () => {
       const { sut,addAccountRepositorySpy, hashSpy } = makeSut()
       const addSpy = jest.spyOn(addAccountRepositorySpy, 'add')
-      await sut.add(mockAddAccountParams())
+      const addAccountParams = mockAddAccountParams()
+      await sut.add(addAccountParams)
       expect(addSpy).toHaveBeenCalledWith({
-        name: 'any_name',
-        email: 'any_email@mail.com',
+        name: addAccountParams.name,
+        email: addAccountParams.email,
         password: hashSpy.digest
       })
     })
@@ -74,9 +76,10 @@ describe('DbAddAccount UseCase', () => {
 
     test('Should call LoadAccountByEmailRepository with correct email', async () => {
       const { sut,loadAccountByEmailRepositorySpy } = makeSut()
-      await sut.add(mockAddAccountParams())
+      const addAccountParams = mockAddAccountParams()
+      await sut.add(addAccountParams)
       console.log(loadAccountByEmailRepositorySpy)
-      expect(loadAccountByEmailRepositorySpy.email).toBe('any_email@mail.com')
+      expect(loadAccountByEmailRepositorySpy.email).toBe(addAccountParams.email)
     })
   })
 })
