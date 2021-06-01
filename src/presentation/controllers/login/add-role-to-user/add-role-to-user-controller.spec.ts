@@ -49,15 +49,14 @@ describe('AddRoleToUserController', () => {
 
   test('Should call AddRoleToUser with correct values', async () => {
     const { sut, addRoleToUserSpy } = makeSut()
-    const addSpy = jest.spyOn(addRoleToUserSpy,'addRoleToUser')
     const httpRequest = mockRequest()
     await sut.handle(httpRequest)
-    expect(addSpy).toHaveBeenCalledWith(httpRequest.body)
+    expect(addRoleToUserSpy.data).toEqual(httpRequest.body)
   })
 
   test('Should return 403 if AddRoleToUser returns null', async () => {
     const { sut, addRoleToUserSpy } = makeSut()
-    jest.spyOn(addRoleToUserSpy,'addRoleToUser').mockReturnValueOnce(Promise.resolve(null))
+    addRoleToUserSpy.accountModel = null
     const httpResponse = await sut.handle(mockRequest())
     expect(httpResponse).toEqual(forbidden(new InvalidRoleOrUserError()))
   })
