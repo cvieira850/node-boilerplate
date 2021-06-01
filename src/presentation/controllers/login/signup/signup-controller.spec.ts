@@ -1,18 +1,20 @@
 import { SignUpController } from './signup-controller'
-import { AddAccount,Validation, Authentication } from './signup-controller-protocols'
-import { HttpRequest } from '@/presentation/protocols'
+import { AddAccount,Validation, HttpRequest } from './signup-controller-protocols'
 import { MissingParamError, ServerError, EmailInUseError } from '@/presentation/errors'
 import { badRequest, forbidden, ok, serverError } from '@/presentation/helpers/http/http-helper'
-import { mockAuthentication, mockAddAccount } from '@/presentation/test'
+import { mockAddAccount, AuthenticationSpy } from '@/presentation/test'
+import { throwError } from '@/domain/test'
 import { mockValidation } from '@/validation/test/mock-validation'
+import faker from 'faker'
 
+const password: String = faker.internet.password()
 const mockRequest = (): HttpRequest => (
   {
     body: {
-      name: 'any_name',
-      email: 'any_email@mail.com',
-      password: 'any_password',
-      passwordConfirmation: 'any_password'
+      name: faker.name.findName(),
+      email: faker.internet.email(),
+      password,
+      passwordConfirmation: password
     }
   }
 )
@@ -21,19 +23,19 @@ type SutTypes = {
   sut: SignUpController
   addAccountStub: AddAccount
   validationStub: Validation
-  authenticationStub: Authentication
+  authenticationSpy: AuthenticationSpy
 }
 
 const makeSut = (): SutTypes => {
   const addAccountStub = mockAddAccount()
   const validationStub = mockValidation()
-  const authenticationStub = mockAuthentication()
-  const sut = new SignUpController(addAccountStub,validationStub, authenticationStub)
+  const authenticationSpy = new AuthenticationSpy()
+  const sut = new SignUpController(addAccountStub,validationStub, authenticationSpy)
   return {
     sut,
     addAccountStub,
     validationStub,
-    authenticationStub
+    authenticationSpy
   }
 }
 
@@ -41,11 +43,12 @@ describe('SignUp Controller', () => {
   test('Should call AddAccount with correct values', async () => {
     const { sut, addAccountStub } = makeSut()
     const addSpy = jest.spyOn(addAccountStub,'add')
-    await sut.handle(mockRequest())
+    const httpRequest = mockRequest()
+    await sut.handle(httpRequest)
     expect(addSpy).toHaveBeenCalledWith({
-      name: 'any_name',
-      email: 'any_email@mail.com',
-      password: 'any_password'
+      name: httpRequest.body.name,
+      email: httpRequest.body.email,
+      password: httpRequest.body.password
     })
   })
 
@@ -66,9 +69,9 @@ describe('SignUp Controller', () => {
   })
 
   test('Should return 200 if valid data is provided', async () => {
-    const { sut } = makeSut()
+    const { sut, authenticationSpy } = makeSut()
     const httpResponse = await sut.handle(mockRequest())
-    expect(httpResponse).toEqual(ok({ accessToken: 'any_token' }))
+    expect(httpResponse).toEqual(ok({ accessToken: authenticationSpy.token }))
   })
 
   test('Should call Validation with correct value', async () => {
@@ -87,18 +90,18 @@ describe('SignUp Controller', () => {
   })
 
   test('Should call Authentication with correct values', async () => {
-    const { sut, authenticationStub } = makeSut()
-    const authSpy = jest.spyOn(authenticationStub,'auth')
-    await sut.handle(mockRequest())
-    expect(authSpy).toHaveBeenCalledWith({
-      email: 'any_email@mail.com',
-      password: 'any_password'
+    const { sut, authenticationSpy } = makeSut()
+    const httpRequest = mockRequest()
+    await sut.handle(httpRequest)
+    expect(authenticationSpy.authentication).toEqual({
+      email: httpRequest.body.email,
+      password: httpRequest.body.password
     })
   })
 
   test('Should return 500 if Authentication throws', async () => {
-    const { sut, authenticationStub } = makeSut()
-    jest.spyOn(authenticationStub,'auth').mockReturnValueOnce(Promise.reject(new Error()))
+    const { sut, authenticationSpy } = makeSut()
+    jest.spyOn(authenticationSpy,'auth').mockImplementationOnce(throwError)
     const httpResponse = await sut.handle(mockRequest())
     expect(httpResponse).toEqual(serverError(new Error()))
   })

@@ -10,3 +10,12 @@ export const mockAddRole = (): AddRole => {
   }
   return new AddRoleStub()
 }
+
+export class AddROleSpy implements AddRole {
+  roleModel = mockRoleModel()
+  data: AddRoleParams
+  async add (data: AddRoleParams): Promise<RoleModel> {
+    this.data = data
+    return Promise.resolve(this.roleModel)
+  }
+}
