@@ -36,9 +36,9 @@ describe('DbAddRole UseCase', () => {
     })
 
     test('Should return a role on success', async () => {
-      const { sut } = makeSut()
+      const { sut, addRoleRepositorySpy } = makeSut()
       const role = await sut.add(mockAddRoleParams())
-      expect(role).toEqual(mockRoleModel())
+      expect(role).toEqual(addRoleRepositorySpy.roleModel)
     })
   })
 

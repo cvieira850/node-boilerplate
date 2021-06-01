@@ -2,7 +2,7 @@ import { AddRoleController } from './add-role-controller'
 import { HttpRequest, Validation } from './add-role-controller-protocols'
 import { badRequest, forbidden, ok, serverError } from '@/presentation/helpers/http/http-helper'
 import { RoleIsAlreadyRegisteredError } from '@/presentation/errors'
-import { mockRoleModel, throwError } from '@/domain/test'
+import { throwError } from '@/domain/test'
 import { mockValidation } from '@/validation/test/mock-validation'
 import { AddRoleSpy } from '@/presentation/test'
 import faker from 'faker'
@@ -68,8 +68,8 @@ describe('AddRoleController', () => {
   })
 
   test('Should return 200 on success', async () => {
-    const { sut } = makeSut()
+    const { sut, addRoleSpy } = makeSut()
     const httpResponse = await sut.handle(mockRequest())
-    expect(httpResponse).toEqual(ok(mockRoleModel()))
+    expect(httpResponse).toEqual(ok(addRoleSpy.roleModel))
   })
 })
