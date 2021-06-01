@@ -1,6 +1,7 @@
 import { DbLoadAccountById } from './db-load-account-by-id'
 import { throwError } from '@/domain/test'
 import { LoadAccountByIdRepositorySpy } from '@/data/test'
+import faker from 'faker'
 
 type SutTypes = {
   sut: DbLoadAccountById
@@ -17,24 +18,27 @@ const makeSut = (): SutTypes => {
     loadAccountByIdRepositorySpy
   }
 }
-
-describe('DbLoadAccountById Usecase', () => {
+let userId: string
+describe('DbLoadAccountById UseCase', () => {
+  beforeEach(() => {
+    userId = faker.datatype.uuid()
+  })
   test('Should call LoadAccountByIdRepository with correct id' , async () => {
     const { sut, loadAccountByIdRepositorySpy } = makeSut()
-    await sut.loadById('any_id')
-    expect(loadAccountByIdRepositorySpy.userId).toBe('any_id')
+    await sut.loadById(userId)
+    expect(loadAccountByIdRepositorySpy.userId).toBe(userId)
   })
 
   test('Should throw if LoadAccountByIdRepository throws', async () => {
     const { sut, loadAccountByIdRepositorySpy } = makeSut()
     jest.spyOn(loadAccountByIdRepositorySpy,'loadById').mockImplementationOnce(throwError)
-    const promise = sut.loadById('any_id')
+    const promise = sut.loadById(userId)
     await expect(promise).rejects.toThrow()
   })
 
   test('Should return an account on success' , async () => {
     const { sut, loadAccountByIdRepositorySpy } = makeSut()
-    const account = await sut.loadById('any_id')
+    const account = await sut.loadById(userId)
     expect(account).toEqual(loadAccountByIdRepositorySpy.accountModel)
   })
 })

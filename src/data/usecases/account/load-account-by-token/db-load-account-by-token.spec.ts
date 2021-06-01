@@ -1,6 +1,7 @@
 import { DbLoadAccountByToken } from './db-load-account-by-token'
 import { throwError } from '@/domain/test'
 import { DecrypterSpy, LoadAccountByTokenRepositorySpy } from '@/data/test'
+import faker from 'faker'
 
 type SutTypes = {
   sut: DbLoadAccountByToken
@@ -21,26 +22,32 @@ const makeSut = (): SutTypes => {
     loadAccountByTokenRepositorySpy
   }
 }
+let token: string
+let role: string
 
-describe('DbLoadAccountByToken Usecase', () => {
+describe('DbLoadAccountByToken UseCase', () => {
+  beforeEach(() => {
+    token = faker.datatype.uuid()
+    role = faker.random.word()
+  })
   describe('Decrypter',() => {
     test('Should call Decrypter with correct values' , async () => {
       const { sut, decrypterSpy } = makeSut()
-      await sut.loadByToken('any_token','any_role')
-      expect(decrypterSpy.ciphertext).toBe('any_token')
+      await sut.loadByToken(token,role)
+      expect(decrypterSpy.ciphertext).toBe(token)
     })
 
     test('Should return null if Decrypter returns null' , async () => {
       const { sut, decrypterSpy } = makeSut()
       decrypterSpy.plaintext = null
-      const account = await sut.loadByToken('any_token','any_role')
+      const account = await sut.loadByToken(token,role)
       expect(account).toBeNull()
     })
 
     test('Should throw if Decrypter throws', async () => {
       const { sut, decrypterSpy } = makeSut()
       jest.spyOn(decrypterSpy,'decrypt').mockImplementationOnce(throwError)
-      const promise = sut.loadByToken('any_token','any_role')
+      const promise = sut.loadByToken(token,role)
       await expect(promise).rejects.toThrow()
     })
   })
@@ -48,42 +55,42 @@ describe('DbLoadAccountByToken Usecase', () => {
   describe('LoadAccountByTokenRepository', () => {
     test('Should call LoadAccountByTokenRepository with correct values' , async () => {
       const { sut, loadAccountByTokenRepositorySpy } = makeSut()
-      await sut.loadByToken('any_token','any_role')
-      expect(loadAccountByTokenRepositorySpy.token).toBe('any_token')
-      expect(loadAccountByTokenRepositorySpy.role).toBe('any_role')
+      await sut.loadByToken(token, role)
+      expect(loadAccountByTokenRepositorySpy.token).toBe(token)
+      expect(loadAccountByTokenRepositorySpy.role).toBe(role)
     })
 
     test('Should return null if LoadAccountByTokenRepository returns null' , async () => {
       const { sut, loadAccountByTokenRepositorySpy } = makeSut()
       loadAccountByTokenRepositorySpy.accountModel = null
-      const account = await sut.loadByToken('any_token','any_role')
+      const account = await sut.loadByToken(token, role)
       expect(account).toBeNull()
     })
 
     test('Should throw if LoadAccountByTokenRepository throws', async () => {
       const { sut, loadAccountByTokenRepositorySpy } = makeSut()
       jest.spyOn(loadAccountByTokenRepositorySpy,'loadByToken').mockImplementationOnce(throwError)
-      const promise = sut.loadByToken('any_token','any_role')
+      const promise = sut.loadByToken(token, role)
       await expect(promise).rejects.toThrow()
     })
 
     test('Should returns null if role id is null' , async () => {
       const { sut, loadAccountByTokenRepositorySpy } = makeSut()
       loadAccountByTokenRepositorySpy.accountModel = null
-      const account = await sut.loadByToken('any_token','any_role')
+      const account = await sut.loadByToken(token, role)
       expect(account).toBeNull()
     })
   })
 
   test('Should return an account on success' , async () => {
     const { sut, loadAccountByTokenRepositorySpy } = makeSut()
-    const account = await sut.loadByToken('any_token')
+    const account = await sut.loadByToken(token)
     expect(account).toEqual(loadAccountByTokenRepositorySpy.accountModel)
   })
 
   test('Should return an account on success' , async () => {
     const { sut, loadAccountByTokenRepositorySpy } = makeSut()
-    const account = await sut.loadByToken('any_token','any_role')
+    const account = await sut.loadByToken(token,role)
     expect(account).toEqual(loadAccountByTokenRepositorySpy.accountModel)
   })
 })

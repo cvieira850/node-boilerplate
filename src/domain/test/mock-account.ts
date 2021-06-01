@@ -25,6 +25,6 @@ export const mockAuthentication = (): AuthenticationModel => ({
 })
 
 export const mockAddRoleToUserParams = (): AddRoleToUserParams => ({
-  userId: 'valid_user_id',
-  roleId: 'valid_role_id'
+  userId: faker.datatype.uuid(),
+  roleId: faker.datatype.uuid()
 })

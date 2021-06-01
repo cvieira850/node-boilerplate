@@ -52,8 +52,9 @@ describe('DbAddRole UseCase', () => {
 
     test('Should call LoadRoleByNameRepository with correct name', async () => {
       const { sut,loadRoleByNameRepositorySpy } = makeSut()
-      await sut.add(mockAddRoleParams())
-      expect(loadRoleByNameRepositorySpy.name).toBe('any_name')
+      const addRoleParams = mockAddRoleParams()
+      await sut.add(addRoleParams)
+      expect(loadRoleByNameRepositorySpy.name).toBe(addRoleParams.name)
     })
   })
 })
