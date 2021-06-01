@@ -1,10 +1,10 @@
 import { AddRoleToUserController } from './add-role-to-user-controller'
-import { Validation, HttpRequest } from './add-role-to-user-protocols'
+import { HttpRequest } from './add-role-to-user-protocols'
 import { badRequest, forbidden, ok, serverError } from '@/presentation/helpers/http/http-helper'
 import { InvalidRoleOrUserError } from '@/presentation/errors'
 import { throwError } from '@/domain/test'
-import { AddRoleToUserSpy } from '@/presentation/test'
-import { mockValidation } from '@/validation/test/mock-validation'
+import { AddRoleToUserSpy , ValidationSpy } from '@/presentation/test'
+
 import faker from 'faker'
 
 const mockRequest = (): HttpRequest => ({
@@ -16,33 +16,32 @@ const mockRequest = (): HttpRequest => ({
 
 type SutTypes = {
   sut: AddRoleToUserController
-  validationStub: Validation
+  validationSpy: ValidationSpy
   addRoleToUserSpy: AddRoleToUserSpy
 }
 
 const makeSut = (): SutTypes => {
-  const validationStub = mockValidation()
+  const validationSpy = new ValidationSpy()
   const addRoleToUserSpy = new AddRoleToUserSpy()
-  const sut = new AddRoleToUserController(validationStub,addRoleToUserSpy)
+  const sut = new AddRoleToUserController(validationSpy,addRoleToUserSpy)
   return {
     sut,
-    validationStub,
+    validationSpy,
     addRoleToUserSpy
   }
 }
 
 describe('AddRoleToUserController', () => {
   test('Should call validation with correct values', async () => {
-    const { sut, validationStub } = makeSut()
-    const validateSpy = jest.spyOn(validationStub,'validate')
+    const { sut, validationSpy } = makeSut()
     const httpRequest = mockRequest()
     await sut.handle(httpRequest)
-    expect(validateSpy).toHaveBeenCalledWith(httpRequest.body)
+    expect(validationSpy.input).toBe(httpRequest.body)
   })
 
   test('Should return 400 if validation fails', async () => {
-    const { sut, validationStub } = makeSut()
-    jest.spyOn(validationStub,'validate').mockReturnValueOnce(new Error())
+    const { sut, validationSpy } = makeSut()
+    jest.spyOn(validationSpy,'validate').mockReturnValueOnce(new Error())
     const httpResponse = await sut.handle(mockRequest())
     expect(httpResponse).toEqual(badRequest(new Error()))
   })

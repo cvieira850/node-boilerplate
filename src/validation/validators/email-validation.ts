@@ -4,14 +4,14 @@ import { InvalidParamError } from '@/presentation/errors'
 
 export class EmailValidation implements Validation {
   constructor (
-    private readonly fildName: string,
+    private readonly fieldName: string,
     private readonly emailValidator: EmailValidator
   ) {}
 
   validate (input: any): Error {
-    const isValid = this.emailValidator.isValid(input[this.fildName])
+    const isValid = this.emailValidator.isValid(input[this.fieldName])
     if (!isValid) {
-      return new InvalidParamError(this.fildName)
+      return new InvalidParamError(this.fieldName)
     }
   }
 }

@@ -1,10 +1,9 @@
 import { AddRoleController } from './add-role-controller'
-import { HttpRequest, Validation } from './add-role-controller-protocols'
+import { HttpRequest } from './add-role-controller-protocols'
 import { badRequest, forbidden, ok, serverError } from '@/presentation/helpers/http/http-helper'
 import { RoleIsAlreadyRegisteredError } from '@/presentation/errors'
+import { AddRoleSpy, ValidationSpy } from '@/presentation/test'
 import { throwError } from '@/domain/test'
-import { mockValidation } from '@/validation/test/mock-validation'
-import { AddRoleSpy } from '@/presentation/test'
 import faker from 'faker'
 
 const mockRequest = (): HttpRequest => ({
@@ -14,34 +13,33 @@ const mockRequest = (): HttpRequest => ({
 })
 
 type SutTypes = {
-  validationStub: Validation
+  validationSpy: ValidationSpy
   sut: AddRoleController
   addRoleSpy: AddRoleSpy
 }
 
 const makeSut = (): SutTypes => {
-  const validationStub = mockValidation()
+  const validationSpy = new ValidationSpy()
   const addRoleSpy = new AddRoleSpy()
-  const sut = new AddRoleController(validationStub,addRoleSpy)
+  const sut = new AddRoleController(validationSpy,addRoleSpy)
   return {
     sut,
-    validationStub,
+    validationSpy,
     addRoleSpy
   }
 }
 
 describe('AddRoleController', () => {
   test('Should call validation with correct values', async () => {
-    const { sut, validationStub } = makeSut()
-    const validateSpy = jest.spyOn(validationStub,'validate')
+    const { sut, validationSpy } = makeSut()
     const httpRequest = mockRequest()
     await sut.handle(httpRequest)
-    expect(validateSpy).toHaveBeenCalledWith(httpRequest.body)
+    expect(validationSpy.input).toBe(httpRequest.body)
   })
 
   test('Should return 400 if validation fails', async () => {
-    const { sut, validationStub } = makeSut()
-    jest.spyOn(validationStub,'validate').mockReturnValueOnce(new Error())
+    const { sut, validationSpy } = makeSut()
+    jest.spyOn(validationSpy,'validate').mockReturnValueOnce(new Error())
     const httpResponse = await sut.handle(mockRequest())
     expect(httpResponse).toEqual(badRequest(new Error()))
   })

@@ -1,10 +1,9 @@
 import { SignUpController } from './signup-controller'
-import { Validation, HttpRequest } from './signup-controller-protocols'
+import { HttpRequest } from './signup-controller-protocols'
 import { MissingParamError, ServerError, EmailInUseError } from '@/presentation/errors'
 import { badRequest, forbidden, ok, serverError } from '@/presentation/helpers/http/http-helper'
-import { AddAccountSpy, AuthenticationSpy } from '@/presentation/test'
+import { AddAccountSpy, AuthenticationSpy, ValidationSpy } from '@/presentation/test'
 import { throwError } from '@/domain/test'
-import { mockValidation } from '@/validation/test/mock-validation'
 import faker from 'faker'
 
 const password: String = faker.internet.password()
@@ -22,19 +21,19 @@ const mockRequest = (): HttpRequest => (
 type SutTypes = {
   sut: SignUpController
   addAccountSpy: AddAccountSpy
-  validationStub: Validation
+  validationSpy: ValidationSpy
   authenticationSpy: AuthenticationSpy
 }
 
 const makeSut = (): SutTypes => {
   const addAccountSpy = new AddAccountSpy()
-  const validationStub = mockValidation()
+  const validationSpy = new ValidationSpy()
   const authenticationSpy = new AuthenticationSpy()
-  const sut = new SignUpController(addAccountSpy,validationStub, authenticationSpy)
+  const sut = new SignUpController(addAccountSpy,validationSpy, authenticationSpy)
   return {
     sut,
     addAccountSpy,
-    validationStub,
+    validationSpy,
     authenticationSpy
   }
 }
@@ -72,17 +71,16 @@ describe('SignUp Controller', () => {
   })
 
   test('Should call Validation with correct value', async () => {
-    const { sut, validationStub } = makeSut()
-    const validateSpy = jest.spyOn(validationStub,'validate')
+    const { sut, validationSpy } = makeSut()
     const httpRequest = mockRequest()
     await sut.handle(httpRequest)
-    expect(validateSpy).toHaveBeenCalledWith(httpRequest.body)
+    expect(validationSpy.input).toBe(httpRequest.body)
   })
 
   test('Should return 400 if validation returns an error', async () => {
-    const { sut, validationStub } = makeSut()
+    const { sut, validationSpy } = makeSut()
     const field = faker.random.word()
-    jest.spyOn(validationStub,'validate').mockReturnValueOnce(new MissingParamError(field))
+    jest.spyOn(validationSpy,'validate').mockReturnValueOnce(new MissingParamError(field))
     const httpResponse = await sut.handle(mockRequest())
     expect(httpResponse).toEqual(badRequest(new MissingParamError(field)))
   })
