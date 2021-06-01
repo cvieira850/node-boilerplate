@@ -84,9 +84,9 @@ describe('DbAuthentication UseCase', () => {
 
   describe('Encrypt', () => {
     test('Should call Encrypt with correct plaintext', async () => {
-      const { sut,encryptSpy } = makeSut()
+      const { sut,encryptSpy, loadAccountByEmailRepositorySpy } = makeSut()
       await sut.auth(mockAuthentication())
-      expect(encryptSpy.plaintext).toBe('any_id')
+      expect(encryptSpy.plaintext).toBe(loadAccountByEmailRepositorySpy.accountModel.id)
     })
 
     test('Should throw if Encrypt throws', async () => {
@@ -105,9 +105,9 @@ describe('DbAuthentication UseCase', () => {
 
   describe('Update Access Token Repository', () => {
     test('Should call UpdateAccessTokenRepository with correct values', async () => {
-      const { sut, updateAccessTokenRepositorySpy, encryptSpy } = makeSut()
+      const { sut, updateAccessTokenRepositorySpy, encryptSpy, loadAccountByEmailRepositorySpy } = makeSut()
       await sut.auth(mockAuthentication())
-      expect(updateAccessTokenRepositorySpy.id).toBe('any_id')
+      expect(updateAccessTokenRepositorySpy.id).toBe(loadAccountByEmailRepositorySpy.accountModel.id)
       expect(updateAccessTokenRepositorySpy.token).toBe(encryptSpy.ciphertext)
     })
 

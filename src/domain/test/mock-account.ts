@@ -11,13 +11,13 @@ export const mockAddAccountParams = (): AddAccountParams => ({
 })
 
 export const mockAddAccountWithTokenParams = (): AddAccountParams => ({
-  name: 'any_name',
-  email: 'any_email@mail.com',
-  password: 'any_password',
-  access_token: 'any_token'
+  name: faker.name.findName(),
+  email: faker.internet.email(),
+  password: faker.internet.password(),
+  access_token: faker.datatype.uuid()
 })
 
-export const mockAccountModel = (): AccountModel => Object.assign({}, mockAddAccountParams(), { id: 'any_id' })
+export const mockAccountModel = (): AccountModel => Object.assign({}, mockAddAccountParams(), { id: faker.datatype.uuid() })
 
 export const mockAuthentication = (): AuthenticationModel => ({
   email: 'any_email@mail.com',
