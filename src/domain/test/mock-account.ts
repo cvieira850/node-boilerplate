@@ -20,8 +20,8 @@ export const mockAddAccountWithTokenParams = (): AddAccountParams => ({
 export const mockAccountModel = (): AccountModel => Object.assign({}, mockAddAccountParams(), { id: faker.datatype.uuid() })
 
 export const mockAuthentication = (): AuthenticationModel => ({
-  email: 'any_email@mail.com',
-  password: 'any_password'
+  email: faker.internet.email(),
+  password: faker.internet.password()
 })
 
 export const mockAddRoleToUserParams = (): AddRoleToUserParams => ({
