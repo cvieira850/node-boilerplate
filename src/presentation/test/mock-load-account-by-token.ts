@@ -5,8 +5,10 @@ import { mockAccountModel } from '@/domain/test'
 export class LoadAccountByTokenSpy implements LoadAccountByToken {
   accountModel = mockAccountModel()
   accessToken: string
-  async loadByToken (accessToken: string): Promise<AccountModel> {
+  role: string
+  async loadByToken (accessToken: string, role?: string): Promise<AccountModel> {
     this.accessToken = accessToken
+    this.role = role
     return Promise.resolve(this.accountModel)
   }
 }

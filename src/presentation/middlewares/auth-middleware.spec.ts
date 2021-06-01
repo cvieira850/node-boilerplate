@@ -4,10 +4,11 @@ import { forbidden, ok, serverError } from '@/presentation/helpers/http/http-hel
 import { AccessDeniedError } from '@/presentation/errors'
 import { LoadAccountByTokenSpy } from '@/presentation/test'
 import { throwError } from '@/domain/test'
+import faker from 'faker'
 
 const makeFakeRequest = (): HttpRequest => ({
   headers: {
-    'x-access-token': 'any_token'
+    'x-access-token': faker.datatype.uuid()
   }
 })
 
@@ -33,11 +34,12 @@ describe('Auth Middlewares', () => {
   })
 
   test('Should call LoadAccountByToken with correct accessToken', async () => {
-    const role = 'any_role'
+    const role = faker.name.jobTitle()
     const { sut, loadAccountByTokenSpy } = makeSut(role)
-    const loadSpy = jest.spyOn(loadAccountByTokenSpy,'loadByToken')
-    await sut.handle(makeFakeRequest())
-    expect(loadSpy).toHaveBeenCalledWith('any_token', role)
+    const fakeRequest = makeFakeRequest()
+    await sut.handle(fakeRequest)
+    expect(loadAccountByTokenSpy.accessToken).toBe(fakeRequest.headers['x-access-token'])
+    expect(loadAccountByTokenSpy.role).toBe(role)
   })
 
   test('Should return 403 if LoadAccountByToken returns null', async () => {
