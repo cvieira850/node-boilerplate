@@ -4,6 +4,8 @@ import { Controller, HttpRequest, HttpResponse } from '@/presentation/protocols'
 import { mockAccountModel } from '@/domain/test'
 import { LogErrorRepositorySpy } from '@/data/test'
 
+import faker from 'faker'
+
 class ControllerSpy implements Controller {
   httpResponse = ok(mockAccountModel())
   httpRequest: HttpRequest
@@ -13,20 +15,22 @@ class ControllerSpy implements Controller {
     return Promise.resolve(this.httpResponse)
   }
 }
-
+const stack = faker.random.words()
 const MakeFakeServerError = (): HttpResponse => {
   const fakeError = new Error()
-  fakeError.stack = 'any_stack'
+  fakeError.stack = stack
+
   return serverError(fakeError)
 }
 
+const password = faker.internet.password()
 const makeFakeRequest = (): HttpRequest => (
   {
     body: {
-      name: 'any_name',
-      email: 'any_email@mail.com',
-      password: 'any_password',
-      passwordConfirmation: 'any_password'
+      name: faker.name.findName(),
+      email: faker.internet.email(),
+      password,
+      passwordConfirmation: password
     }
   }
 )
@@ -66,6 +70,6 @@ describe('LogControllerDecorator', () => {
     const { sut, controllerSpy, logErrorRepositorySpy } = makeSut()
     jest.spyOn(controllerSpy,'handle').mockReturnValueOnce(Promise.resolve(MakeFakeServerError()))
     await sut.handle(makeFakeRequest())
-    expect(logErrorRepositorySpy.stack).toBe('any_stack')
+    expect(logErrorRepositorySpy.stack).toBe(stack)
   })
 })
