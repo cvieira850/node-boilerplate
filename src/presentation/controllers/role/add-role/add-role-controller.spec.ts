@@ -1,31 +1,32 @@
 import { AddRoleController } from './add-role-controller'
-import { HttpRequest, Validation, AddRole } from './add-role-controller-protocols'
+import { HttpRequest, Validation } from './add-role-controller-protocols'
 import { badRequest, forbidden, ok, serverError } from '@/presentation/helpers/http/http-helper'
 import { RoleIsAlreadyRegisteredError } from '@/presentation/errors'
-import { mockRoleModel } from '@/domain/test'
+import { mockRoleModel, throwError } from '@/domain/test'
 import { mockValidation } from '@/validation/test/mock-validation'
-import { mockAddRole } from '@/presentation/test'
+import { AddRoleSpy } from '@/presentation/test'
+import faker from 'faker'
 
 const mockRequest = (): HttpRequest => ({
   body: {
-    name: 'any_name'
+    name: faker.name.findName()
   }
 })
 
 type SutTypes = {
   validationStub: Validation
   sut: AddRoleController
-  addRoleStub: AddRole
+  addRoleSpy: AddRoleSpy
 }
 
 const makeSut = (): SutTypes => {
   const validationStub = mockValidation()
-  const addRoleStub = mockAddRole()
-  const sut = new AddRoleController(validationStub,addRoleStub)
+  const addRoleSpy = new AddRoleSpy()
+  const sut = new AddRoleController(validationStub,addRoleSpy)
   return {
     sut,
     validationStub,
-    addRoleStub
+    addRoleSpy
   }
 }
 
@@ -46,23 +47,22 @@ describe('AddRoleController', () => {
   })
 
   test('Should call AddRole with correct values', async () => {
-    const { sut, addRoleStub } = makeSut()
-    const addSpy = jest.spyOn(addRoleStub,'add')
+    const { sut, addRoleSpy } = makeSut()
     const httpRequest = mockRequest()
     await sut.handle(httpRequest)
-    expect(addSpy).toHaveBeenCalledWith(httpRequest.body)
+    expect(addRoleSpy.data).toEqual(httpRequest.body)
   })
 
   test('Should return 403 if AddRole returns null', async () => {
-    const { sut, addRoleStub } = makeSut()
-    jest.spyOn(addRoleStub,'add').mockReturnValueOnce(Promise.resolve(null))
+    const { sut, addRoleSpy } = makeSut()
+    addRoleSpy.roleModel = null
     const httpResponse = await sut.handle(mockRequest())
     expect(httpResponse).toEqual(forbidden(new RoleIsAlreadyRegisteredError()))
   })
 
   test('Should return 500 if AddRole throws', async () => {
-    const { sut, addRoleStub } = makeSut()
-    jest.spyOn(addRoleStub,'add').mockResolvedValueOnce(Promise.reject(new Error()))
+    const { sut, addRoleSpy } = makeSut()
+    jest.spyOn(addRoleSpy,'add').mockImplementationOnce(throwError)
     const httpResponse = await sut.handle(mockRequest())
     expect(httpResponse).toEqual(serverError(new Error()))
   })
