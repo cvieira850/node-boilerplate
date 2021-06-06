@@ -19,6 +19,11 @@ export const mockAddAccountWithTokenParams = (): AddAccountParams => ({
 
 export const mockAccountModel = (): AccountModel => Object.assign({}, mockAddAccountParams(), { id: faker.datatype.uuid() })
 
+export const mockAccountsModel = (): AccountModel[] => ([
+  mockAccountModel(),
+  mockAccountModel()
+])
+
 export const mockAuthentication = (): AuthenticationModel => ({
   email: faker.internet.email(),
   password: faker.internet.password()
