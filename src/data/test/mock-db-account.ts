@@ -2,11 +2,12 @@ import { AddAccountRepository } from '@/data/protocols/db/account/add-account-re
 import { AddRoleToUserRepository } from '@/data/protocols/db/account/add-role-to-user-repository'
 import { LoadAccountByEmailRepository } from '@/data/protocols/db/account/load-account-by-email-repository'
 import { LoadAccountByIdRepository } from '@/data/protocols/db/account/load-account-by-id-repository'
+import { LoadAccountsRepository } from '@/data/protocols/db/account/load-accounts-repository'
+import { LoadAccountByTokenRepository } from '@/data/protocols/db/account/load-account-by-token-repository'
 import { mockAccountModel } from '@/domain/test'
 import { AccountModel } from '@/domain/models/account'
 import { AddAccountParams } from '@/domain/usecases/account/add-account'
 import { AddRoleToUserParams } from '@/domain/usecases/account/add-role-to-user'
-import { LoadAccountByTokenRepository } from '../protocols/db/account/load-account-by-token-repository'
 
 export class AddAccountRepositorySpy implements AddAccountRepository {
   accountModel = mockAccountModel()
@@ -48,6 +49,14 @@ export class LoadAccountByIdRepositorySpy implements LoadAccountByIdRepository {
   }
 }
 
+export class LoadAccountsRepositorySpy implements LoadAccountsRepository {
+  result = [mockAccountModel(),mockAccountModel()]
+  userId: string
+
+  async load (): Promise<AccountModel[]> {
+    return Promise.resolve(this.result)
+  }
+}
 export class LoadAccountByTokenRepositorySpy implements LoadAccountByTokenRepository {
   accountModel = mockAccountModel()
   token: string
