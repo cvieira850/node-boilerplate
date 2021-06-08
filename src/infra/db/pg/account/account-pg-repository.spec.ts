@@ -81,6 +81,34 @@ describe('Account Pg Repository', () => {
     })
   })
 
+  describe('load()', () => {
+    test('Should return an array of accounts on load success', async () => {
+      const sut = makeSut()
+      const addAccountParams = mockAddAccountParams()
+      const addAccountParams2 = mockAddAccountParams()
+      await getConnection()
+        .createQueryBuilder()
+        .insert()
+        .into(User)
+        .values(addAccountParams)
+        .execute()
+      await getConnection()
+        .createQueryBuilder()
+        .insert()
+        .into(User)
+        .values(addAccountParams2)
+        .execute()
+      const accounts = await sut.load()
+      expect(accounts).toBeTruthy()
+      expect(accounts[0].name).toBe(addAccountParams.name)
+      expect(accounts[0].email).toBe(addAccountParams.email)
+      expect(accounts[0].password).toBe(addAccountParams.password)
+      expect(accounts[1].name).toBe(addAccountParams2.name)
+      expect(accounts[1].email).toBe(addAccountParams2.email)
+      expect(accounts[1].password).toBe(addAccountParams2.password)
+    })
+  })
+
   describe('addRoleToUser() ', () => {
     test('Should return an account on addRoleToUser success', async () => {
       const sut = makeSut()
