@@ -127,9 +127,35 @@ describe('Login Routes', () => {
       const user = await UserRepository.findOne({ id: id })
       user.access_token = accessToken
       await UserRepository.save(user)
-      console.log(id)
       await request(app)
         .get(`/api/users/${id}`)
+        .set('x-access-token', accessToken)
+        .expect(200)
+    })
+  })
+  describe('GET /users', () => {
+    test('Should return 200 on load accounts', async () => {
+      const password = await hash('123',12)
+      const res = await getConnection()
+        .createQueryBuilder()
+        .insert()
+        .into(User)
+        .values(
+          {
+            name: 'valid_name',
+            email: 'contato@caiovieira.com.br',
+            password
+          }
+        )
+        .execute()
+      const id: string = res.generatedMaps[0].id
+      const accessToken = sign(id,process.env.JWT_SECRET)
+      const UserRepository = getRepository(User)
+      const user = await UserRepository.findOne({ id: id })
+      user.access_token = accessToken
+      await UserRepository.save(user)
+      await request(app)
+        .get('/api/users')
         .set('x-access-token', accessToken)
         .expect(200)
     })
