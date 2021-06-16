@@ -1,9 +1,10 @@
 import { HttpRequest } from './update-account-protocols'
 import { UpdateAccountController } from './update-account-controller'
 import { UpdateAccountSpy, ValidationSpy } from '@/presentation/test'
-import { MissingParamError } from '@/presentation/errors'
-import { badRequest } from '@/presentation/helpers/http/http-helper'
+import { MissingParamError, ServerError } from '@/presentation/errors'
+import { badRequest, serverError } from '@/presentation/helpers/http/http-helper'
 import faker from 'faker'
+import { throwError } from '@/domain/test'
 
 const mockRequest = (): HttpRequest => (
   {
@@ -56,6 +57,13 @@ describe('UpdateAccount Controller', () => {
         name: httpRequest.body.name,
         email: httpRequest.body.email
       })
+    })
+
+    test('Should return 500 if UpdateAccount throws ', async () => {
+      const { sut,updateAccountSpy } = makeSut()
+      jest.spyOn(updateAccountSpy,'update').mockImplementationOnce(throwError)
+      const httpResponse = await sut.handle(mockRequest())
+      expect(httpResponse).toEqual(serverError(new ServerError(null)))
     })
   })
 })
