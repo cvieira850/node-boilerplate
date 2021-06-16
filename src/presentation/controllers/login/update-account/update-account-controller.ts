@@ -1,5 +1,5 @@
 import { Controller,HttpRequest, HttpResponse, Validation, UpdateAccount } from './update-account-protocols'
-import { badRequest } from '@/presentation/helpers/http/http-helper'
+import { badRequest, serverError } from '@/presentation/helpers/http/http-helper'
 
 export class UpdateAccountController implements Controller {
   constructor (
@@ -8,11 +8,15 @@ export class UpdateAccountController implements Controller {
   ) {}
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
-    const error = this.validation.validate(httpRequest.body)
-    if (error) {
-      return badRequest(error)
+    try {
+      const error = this.validation.validate(httpRequest.body)
+      if (error) {
+        return badRequest(error)
+      }
+      await this.updateAccount.update(httpRequest.body)
+      return Promise.resolve(null)
+    } catch (error) {
+      return serverError(error)
     }
-    await this.updateAccount.update(httpRequest.body)
-    return Promise.resolve(null)
   }
 }
