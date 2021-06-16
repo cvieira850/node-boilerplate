@@ -1,5 +1,6 @@
 import { Controller,HttpRequest, HttpResponse, Validation, UpdateAccount } from './update-account-protocols'
-import { badRequest, serverError } from '@/presentation/helpers/http/http-helper'
+import { badRequest, forbidden, serverError } from '@/presentation/helpers/http/http-helper'
+import { EmailInUseError } from '@/presentation/errors'
 
 export class UpdateAccountController implements Controller {
   constructor (
@@ -13,7 +14,10 @@ export class UpdateAccountController implements Controller {
       if (error) {
         return badRequest(error)
       }
-      await this.updateAccount.update(httpRequest.body)
+      const updatedAccount = await this.updateAccount.update(httpRequest.body)
+      if (!updatedAccount) {
+        return forbidden(new EmailInUseError())
+      }
       return Promise.resolve(null)
     } catch (error) {
       return serverError(error)
