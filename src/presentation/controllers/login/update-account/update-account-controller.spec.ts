@@ -2,7 +2,7 @@ import { HttpRequest } from './update-account-protocols'
 import { UpdateAccountController } from './update-account-controller'
 import { UpdateAccountSpy, ValidationSpy } from '@/presentation/test'
 import { EmailInUseError, MissingParamError, ServerError } from '@/presentation/errors'
-import { badRequest, forbidden, serverError } from '@/presentation/helpers/http/http-helper'
+import { badRequest, forbidden, ok, serverError } from '@/presentation/helpers/http/http-helper'
 import { throwError } from '@/domain/test'
 import faker from 'faker'
 
@@ -71,6 +71,12 @@ describe('UpdateAccount Controller', () => {
       updateAccountSpy.accountModel = null
       const httpResponse = await sut.handle(mockRequest())
       expect(httpResponse).toEqual(forbidden(new EmailInUseError()))
+    })
+
+    test('Should return 200 if UpdateAccount succeeds', async () => {
+      const { sut, updateAccountSpy } = makeSut()
+      const httpResponse = await sut.handle(mockRequest())
+      expect(httpResponse).toEqual(ok(updateAccountSpy.accountModel))
     })
   })
 })
