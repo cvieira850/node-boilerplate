@@ -1,5 +1,5 @@
 import { Controller,HttpRequest, HttpResponse, Validation, UpdateAccount } from './update-account-protocols'
-import { badRequest, forbidden, serverError } from '@/presentation/helpers/http/http-helper'
+import { badRequest, forbidden, ok, serverError } from '@/presentation/helpers/http/http-helper'
 import { EmailInUseError } from '@/presentation/errors'
 
 export class UpdateAccountController implements Controller {
@@ -18,7 +18,7 @@ export class UpdateAccountController implements Controller {
       if (!updatedAccount) {
         return forbidden(new EmailInUseError())
       }
-      return Promise.resolve(null)
+      return ok(updatedAccount)
     } catch (error) {
       return serverError(error)
     }
