@@ -1,10 +1,10 @@
 import { HttpRequest } from './update-account-protocols'
 import { UpdateAccountController } from './update-account-controller'
 import { UpdateAccountSpy, ValidationSpy } from '@/presentation/test'
-import { MissingParamError, ServerError } from '@/presentation/errors'
-import { badRequest, serverError } from '@/presentation/helpers/http/http-helper'
-import faker from 'faker'
+import { EmailInUseError, MissingParamError, ServerError } from '@/presentation/errors'
+import { badRequest, forbidden, serverError } from '@/presentation/helpers/http/http-helper'
 import { throwError } from '@/domain/test'
+import faker from 'faker'
 
 const mockRequest = (): HttpRequest => (
   {
@@ -64,6 +64,13 @@ describe('UpdateAccount Controller', () => {
       jest.spyOn(updateAccountSpy,'update').mockImplementationOnce(throwError)
       const httpResponse = await sut.handle(mockRequest())
       expect(httpResponse).toEqual(serverError(new ServerError(null)))
+    })
+
+    test('Should return 403 if UpdateAccount returns null', async () => {
+      const { sut, updateAccountSpy } = makeSut()
+      updateAccountSpy.accountModel = null
+      const httpResponse = await sut.handle(mockRequest())
+      expect(httpResponse).toEqual(forbidden(new EmailInUseError()))
     })
   })
 })
