@@ -19,7 +19,10 @@ export class UpdateAccountController implements Controller {
       if (!account) {
         return forbidden(new InvalidParamError('userId'))
       }
-      const updatedAccount = await this.updateAccount.update(httpRequest.body)
+      const updatedAccount = await this.updateAccount.update({
+        id: httpRequest.params.userId,
+        ...httpRequest.body
+      })
       if (!updatedAccount) {
         return forbidden(new EmailInUseError())
       }
