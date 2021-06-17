@@ -1,7 +1,7 @@
 import { HttpRequest } from './update-account-protocols'
 import { UpdateAccountController } from './update-account-controller'
 import { LoadAccountByIdSpy, UpdateAccountSpy, ValidationSpy } from '@/presentation/test'
-import { EmailInUseError, MissingParamError, ServerError } from '@/presentation/errors'
+import { EmailInUseError, InvalidParamError, MissingParamError, ServerError } from '@/presentation/errors'
 import { badRequest, forbidden, ok, serverError } from '@/presentation/helpers/http/http-helper'
 import { throwError } from '@/domain/test'
 import faker from 'faker'
@@ -60,6 +60,12 @@ describe('UpdateAccount Controller', () => {
       const httpRequest = mockRequest()
       await sut.handle(httpRequest)
       expect(loadAccountByIdSpy.id).toBe(httpRequest.params.userId)
+    })
+    test('Should return 403 if LoadAccountById returns null', async () => {
+      const { sut,loadAccountByIdSpy } = makeSut()
+      loadAccountByIdSpy.accountModel = null
+      const httpResponse = await sut.handle(mockRequest())
+      expect(httpResponse).toEqual(forbidden(new InvalidParamError('userId')))
     })
   })
   describe('Update Account', () => {
