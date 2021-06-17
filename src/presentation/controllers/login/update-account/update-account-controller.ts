@@ -1,6 +1,6 @@
 import { LoadAccountById,Controller,HttpRequest, HttpResponse, Validation, UpdateAccount } from './update-account-protocols'
 import { badRequest, forbidden, ok, serverError } from '@/presentation/helpers/http/http-helper'
-import { EmailInUseError } from '@/presentation/errors'
+import { EmailInUseError, InvalidParamError } from '@/presentation/errors'
 
 export class UpdateAccountController implements Controller {
   constructor (
@@ -15,7 +15,10 @@ export class UpdateAccountController implements Controller {
       if (error) {
         return badRequest(error)
       }
-      await this.loadAccountById.loadById(httpRequest.params.userId)
+      const account = await this.loadAccountById.loadById(httpRequest.params.userId)
+      if (!account) {
+        return forbidden(new InvalidParamError('userId'))
+      }
       const updatedAccount = await this.updateAccount.update(httpRequest.body)
       if (!updatedAccount) {
         return forbidden(new EmailInUseError())
