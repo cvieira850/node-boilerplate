@@ -67,6 +67,13 @@ describe('UpdateAccount Controller', () => {
       const httpResponse = await sut.handle(mockRequest())
       expect(httpResponse).toEqual(forbidden(new InvalidParamError('userId')))
     })
+
+    test('Should return 500 if LoadAccountById throws', async () => {
+      const { sut, loadAccountByIdSpy } = makeSut()
+      jest.spyOn(loadAccountByIdSpy,'loadById').mockImplementationOnce(throwError)
+      const httpResponse = await sut.handle(mockRequest())
+      expect(httpResponse).toEqual(serverError(new Error()))
+    })
   })
   describe('Update Account', () => {
     test('Should call UpdateAccount with correct values', async () => {
