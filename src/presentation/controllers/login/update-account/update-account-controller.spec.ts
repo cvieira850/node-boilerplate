@@ -1,6 +1,6 @@
 import { HttpRequest } from './update-account-protocols'
 import { UpdateAccountController } from './update-account-controller'
-import { UpdateAccountSpy, ValidationSpy } from '@/presentation/test'
+import { LoadAccountByIdSpy, UpdateAccountSpy, ValidationSpy } from '@/presentation/test'
 import { EmailInUseError, MissingParamError, ServerError } from '@/presentation/errors'
 import { badRequest, forbidden, ok, serverError } from '@/presentation/helpers/http/http-helper'
 import { throwError } from '@/domain/test'
@@ -8,6 +8,9 @@ import faker from 'faker'
 
 const mockRequest = (): HttpRequest => (
   {
+    params: {
+      userId: faker.datatype.uuid()
+    },
     body: {
       name: faker.name.findName(),
       email: faker.internet.email()
@@ -19,15 +22,18 @@ type SutTypes = {
   sut: UpdateAccountController
   validationSpy: ValidationSpy
   updateAccountSpy: UpdateAccountSpy
+  loadAccountByIdSpy: LoadAccountByIdSpy
 }
 const makeSut = (): SutTypes => {
   const validationSpy = new ValidationSpy()
   const updateAccountSpy = new UpdateAccountSpy()
-  const sut = new UpdateAccountController(validationSpy, updateAccountSpy)
+  const loadAccountByIdSpy = new LoadAccountByIdSpy()
+  const sut = new UpdateAccountController(validationSpy, updateAccountSpy, loadAccountByIdSpy)
   return {
     sut,
     validationSpy,
-    updateAccountSpy
+    updateAccountSpy,
+    loadAccountByIdSpy
   }
 }
 
@@ -46,6 +52,14 @@ describe('UpdateAccount Controller', () => {
       jest.spyOn(validationSpy,'validate').mockReturnValueOnce(new MissingParamError(field))
       const httpResponse = await sut.handle(mockRequest())
       expect(httpResponse).toEqual(badRequest(new MissingParamError(field)))
+    })
+  })
+  describe('Load Account by id', () => {
+    test('Should call LoadAccountById with correct id', async () => {
+      const { sut,loadAccountByIdSpy } = makeSut()
+      const httpRequest = mockRequest()
+      await sut.handle(httpRequest)
+      expect(loadAccountByIdSpy.id).toBe(httpRequest.params.userId)
     })
   })
   describe('Update Account', () => {
