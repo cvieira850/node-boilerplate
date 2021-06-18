@@ -1,6 +1,6 @@
 import { DbUpdateAccount } from './db-update-account'
 import { UpdateAccountRepositorySpy } from '@/data/test'
-import { mockUpdateAccountParams } from '@/domain/test'
+import { mockUpdateAccountParams, throwError } from '@/domain/test'
 
 type SutTypes = {
   sut: DbUpdateAccount
@@ -16,7 +16,7 @@ const makeSut = (): SutTypes => {
   }
 }
 describe('DbUpdateAccount Usecase', () => {
-  describe('Update Account Repository', () => [
+  describe('Update Account Repository', () => {
     test('Should call UpdateAccountRepository with correct values', async () => {
       const { sut,updateAccountRepositorySpy } = makeSut()
       const updateAccountParams = mockUpdateAccountParams()
@@ -27,5 +27,12 @@ describe('DbUpdateAccount Usecase', () => {
         email: updateAccountParams.email
       })
     })
-  ])
+
+    test('Should throw if UpdateAccountRepository throws', async () => {
+      const { sut, updateAccountRepositorySpy } = makeSut()
+      jest.spyOn(updateAccountRepositorySpy,'update').mockImplementationOnce(throwError)
+      const promise = sut.update(mockUpdateAccountParams())
+      await expect(promise).rejects.toThrow()
+    })
+  })
 })
