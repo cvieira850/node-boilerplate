@@ -34,5 +34,11 @@ describe('DbUpdateAccount Usecase', () => {
       const promise = sut.update(mockUpdateAccountParams())
       await expect(promise).rejects.toThrow()
     })
+
+    test('Should return an account on success', async () => {
+      const { sut, updateAccountRepositorySpy } = makeSut()
+      const account = await sut.update(mockUpdateAccountParams())
+      expect(account).toEqual(updateAccountRepositorySpy.accountModel)
+    })
   })
 })
