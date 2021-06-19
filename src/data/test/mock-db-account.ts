@@ -8,6 +8,8 @@ import { mockAccountModel } from '@/domain/test'
 import { AccountModel } from '@/domain/models/account'
 import { AddAccountParams } from '@/domain/usecases/account/add-account'
 import { AddRoleToUserParams } from '@/domain/usecases/account/add-role-to-user'
+import { UpdateAccountParams } from '@/domain/usecases/account/update-account'
+import { UpdateAccountRepository } from '../protocols/db/account/update-account-repository'
 
 export class AddAccountRepositorySpy implements AddAccountRepository {
   accountModel = mockAccountModel()
@@ -78,5 +80,15 @@ export class UpdateAccessTokenRepositorySpy implements UpdateAccessTokenReposito
     this.id = id
     this.token = token
     return Promise.resolve(this.result)
+  }
+}
+
+export class UpdateAccountRepositorySpy implements UpdateAccountRepository {
+  accountModel = mockAccountModel()
+  updateAccountParams: UpdateAccountParams
+
+  async update (accountData: UpdateAccountParams): Promise<AccountModel> {
+    this.updateAccountParams = accountData
+    return Promise.resolve(this.accountModel)
   }
 }

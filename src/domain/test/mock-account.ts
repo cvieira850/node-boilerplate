@@ -2,12 +2,19 @@ import { AuthenticationModel } from '@/data/usecases/account/authentication/db-a
 import { AddRoleToUserParams } from '@/data/usecases/role/add-role-to-user/db-add-role-to-user-protocols'
 import { AccountModel } from '@/domain/models/account'
 import { AddAccountParams } from '@/domain/usecases/account/add-account'
+import { UpdateAccountParams } from '@/presentation/controllers/login/update-account/update-account-protocols'
 import faker from 'faker'
 
 export const mockAddAccountParams = (): AddAccountParams => ({
   name: faker.name.findName(),
   email: faker.internet.email(),
   password: faker.internet.password()
+})
+
+export const mockUpdateAccountParams = (): UpdateAccountParams => ({
+  id: faker.datatype.uuid(),
+  name: faker.name.findName(),
+  email: faker.internet.email()
 })
 
 export const mockAddAccountWithTokenParams = (): AddAccountParams => ({
