@@ -13,6 +13,8 @@ import Role from '@/infra/db/pg/typeorm/entities/role'
 
 import { getRepository } from 'typeorm'
 import { LoadAccountsRepository } from '@/data/protocols/db/account/load-accounts-repository'
+import { UpdateAccountRepository } from '@/data/protocols/db/account/update-account-repository'
+import { UpdateAccountParams } from '@/domain/usecases/account/update-account'
 
 export class AccountPgRepository implements
 AddAccountRepository,
@@ -21,7 +23,8 @@ UpdateAccessTokenRepository,
 LoadAccountByIdRepository,
 AddRoleToUserRepository,
 LoadAccountByTokenRepository,
-LoadAccountsRepository {
+LoadAccountsRepository,
+UpdateAccountRepository {
   async add (accountData: AddAccountParams): Promise<AccountModel> {
     const userRepository = getRepository(User)
     const userCreated = userRepository.create(accountData)
@@ -87,5 +90,16 @@ LoadAccountsRepository {
     const UserRepository = getRepository(User)
     const accounts = await UserRepository.find()
     return accounts
+  }
+
+  async update (accountData: UpdateAccountParams): Promise<AccountModel> {
+    const UserRepository = getRepository(User)
+    const user = await UserRepository.findOne(accountData.id)
+    if (user) {
+      user.name = accountData.name
+      user.email = accountData.email
+      return await UserRepository.save(user)
+    }
+    return null
   }
 }
