@@ -270,7 +270,7 @@ describe('Account Pg Repository', () => {
   })
 
   describe('update()', () => {
-    test('Should update provider on success', async () => {
+    test('Should update account on success', async () => {
       const email = faker.internet.email()
       const name = faker.name.firstName()
       const addAccountParams = mockAddAccountParams()
@@ -286,6 +286,14 @@ describe('Account Pg Repository', () => {
       expect(httpResponse.id).toBe(fakeAccount.generatedMaps[0].id)
       expect(httpResponse.name).toBe(name)
       expect(httpResponse.email).toBe(email)
+    })
+    test('Should return null if did not load account', async () => {
+      const sut = makeSut()
+      const email = faker.internet.email()
+      const name = faker.name.firstName()
+      const id = faker.datatype.uuid()
+      const httpResponse = await sut.update({ id, name , email })
+      expect(httpResponse).toBeNull()
     })
   })
 })
