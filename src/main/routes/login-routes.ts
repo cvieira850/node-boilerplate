@@ -6,6 +6,7 @@ import { makeAuthMiddleware } from '@/main/factories/middlewares/auth-middleware
 import { makeAddRoleToUserController } from '@/main/factories/controllers/login/add-role-to-user/add-role-to-user-controller-factory'
 import { makeLoadAccountByIdController } from '@/main/factories/controllers/login/load-account-by-id/load-account-by-id-controller-factory'
 import { makeLoadAccountsController } from '@/main/factories/controllers/login/load-accounts/load-accounts-controller-factory'
+import { makeUpdateAccountController } from '../factories/controllers/login/update-account/update-account-controller-factory'
 import { Router } from 'express'
 
 export default (router: Router): void => {
@@ -15,4 +16,5 @@ export default (router: Router): void => {
   router.post('/users/role', adaptRoute(makeAddRoleToUserController()))
   router.get('/users/:userId',auth, adaptRoute(makeLoadAccountByIdController()))
   router.get('/users',auth, adaptRoute(makeLoadAccountsController()))
+  router.put('/users',auth,adaptRoute(makeUpdateAccountController()))
 }
