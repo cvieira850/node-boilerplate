@@ -161,7 +161,7 @@ describe('Login Routes', () => {
     })
   })
   describe('PUT /users', () => {
-    test('should ', async () => {
+    test('Should Update Account ', async () => {
       const password = await hash('123',12)
       const res = await getConnection()
         .createQueryBuilder()
