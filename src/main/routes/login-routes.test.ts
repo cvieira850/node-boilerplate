@@ -160,4 +160,36 @@ describe('Login Routes', () => {
         .expect(200)
     })
   })
+  describe('PUT /users', () => {
+    test('Should Update Account ', async () => {
+      const password = await hash('123',12)
+      const res = await getConnection()
+        .createQueryBuilder()
+        .insert()
+        .into(User)
+        .values(
+          {
+            name: 'valid_name',
+            email: 'contato@caiovieira.com.br',
+            password
+          }
+        )
+        .execute()
+      const id: string = res.generatedMaps[0].id
+      const accessToken = sign(id,process.env.JWT_SECRET)
+      const UserRepository = getRepository(User)
+      const user = await UserRepository.findOne({ id: id })
+      user.access_token = accessToken
+      await UserRepository.save(user)
+      await request(app)
+        .put('/api/users')
+        .set('x-access-token', accessToken)
+        .send({
+          userId: res.generatedMaps[0].id,
+          name: 'valid_name2',
+          email: 'contato2@caiovieira.com.br'
+        })
+        .expect(200)
+    })
+  })
 })
