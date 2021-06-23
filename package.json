@@ -59,6 +59,6 @@
     "node": "14.x"
   },
   "_moduleAliases": {
-    "@": "src"
+    "@": "dist"
   }
 }

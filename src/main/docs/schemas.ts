@@ -7,7 +7,8 @@ import {
   signUpParamsSchema,
   addRoleParamsSchema,
   addRoleToUserParamsSchema,
-  accountsSchema
+  accountsSchema,
+  updateAccountParamsSchema
 } from './schemas/'
 
 export default {
@@ -19,5 +20,6 @@ export default {
   role: roleSchema,
   signupParams: signUpParamsSchema,
   addRoleParams: addRoleParamsSchema,
-  addRoleToUserParams: addRoleToUserParamsSchema
+  addRoleToUserParams: addRoleToUserParamsSchema,
+  updateAccountParams: updateAccountParamsSchema
 }
